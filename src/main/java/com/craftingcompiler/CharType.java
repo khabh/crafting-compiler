@@ -1,3 +1,5 @@
+package com.craftingcompiler;
+
 import java.util.function.Predicate;
 
 public enum CharType {

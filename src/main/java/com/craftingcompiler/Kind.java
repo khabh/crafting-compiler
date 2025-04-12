@@ -1,3 +1,5 @@
+package com.craftingcompiler;
+
 public enum Kind {
     Unknown, EndOfToken,
 

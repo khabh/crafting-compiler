@@ -1,3 +1,5 @@
+package com.craftingcompiler;
+
 public class Token {
     private final Kind kind;
     private final String value;
@@ -13,5 +15,9 @@ public class Token {
 
     public String getValue() {
         return value;
+    }
+
+    public boolean isKindEquals(Kind kind) {
+        return kind.equals(this.kind);
     }
 }
