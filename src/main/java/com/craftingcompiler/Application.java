@@ -1,5 +1,7 @@
 package com.craftingcompiler;
 
+import com.craftingcompiler.node.Program;
+import com.craftingcompiler.util.SyntaxPrinter;
 import java.util.List;
 
 public class Application {
@@ -12,6 +14,8 @@ public class Application {
                 """;
         List<Token> tokens = new TokenScanner(sourceCode).scan();
         printTokens(tokens);
+        Program syntaxTree = new Parser(tokens).parse();
+        SyntaxPrinter.printSyntaxTree(syntaxTree);
     }
 
     private static void printTokens(List<Token> tokens) {
