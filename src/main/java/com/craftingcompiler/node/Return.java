@@ -1,5 +1,6 @@
 package com.craftingcompiler.node;
 
+import com.craftingcompiler.exception.ReturnException;
 import com.craftingcompiler.util.SyntaxPrinter;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,7 +13,7 @@ public class Return extends Statement {
 
     @Override
     public void interpret() {
-
+        throw new ReturnException(expression.interpret());
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.craftingcompiler.node;
 
+import com.craftingcompiler.exception.BreakException;
 import com.craftingcompiler.util.SyntaxPrinter;
 import lombok.Getter;
 
@@ -8,7 +9,7 @@ public class Break extends Statement {
 
     @Override
     public void interpret() {
-
+        throw new BreakException();
     }
 
     @Override
