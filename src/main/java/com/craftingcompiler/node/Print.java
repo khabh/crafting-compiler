@@ -14,7 +14,15 @@ public class Print extends Statement {
 
     @Override
     public void interpret() {
-        
+        StringBuilder output = new StringBuilder();
+        for (Expression argument : arguments) {
+            Object value = argument.interpret();
+            output.append(value);
+        }
+        if (lineFeed) {
+            output.append("\n");
+        }
+        System.out.print(output);
     }
 
     @Override
