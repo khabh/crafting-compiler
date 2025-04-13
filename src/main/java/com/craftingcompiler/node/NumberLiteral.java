@@ -12,7 +12,7 @@ public class NumberLiteral extends Expression {
 
     @Override
     public Object interpret() {
-        return null;
+        return value;
     }
 
     @Override
