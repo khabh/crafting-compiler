@@ -1,6 +1,9 @@
 package com.craftingcompiler.node;
 
+import static com.craftingcompiler.interpreter.Interpreter.local;
+
 import com.craftingcompiler.util.SyntaxPrinter;
+import java.util.HashMap;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,7 +18,23 @@ public class If extends Statement {
 
     @Override
     public void interpret() {
-
+        int index = 0;
+        while (index < conditions.size()) {
+            Expression condition = conditions.get(index);
+            if (!(boolean) condition.interpret()) {
+                index++;
+                continue;
+            }
+            local.getLast().addFirst(new HashMap<>());
+            blocks.get(index).forEach(Statement::interpret);
+            local.getLast().pollFirst();
+            return;
+        }
+        if (elseBlock != null && !elseBlock.isEmpty()) {
+            local.getLast().addFirst(new HashMap<>());
+            elseBlock.forEach(Statement::interpret);
+            local.getLast().pollFirst();
+        }
     }
 
     @Override
