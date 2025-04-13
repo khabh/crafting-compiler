@@ -12,7 +12,7 @@ public class ExpressionStatement extends Statement {
 
     @Override
     public void interpret() {
-
+        expression.interpret();
     }
 
     @Override

@@ -15,7 +15,9 @@ public class Function extends Statement {
 
     @Override
     public void interpret() {
-
+        for (Statement block : block) {
+            block.interpret();
+        }
     }
 
     @Override
