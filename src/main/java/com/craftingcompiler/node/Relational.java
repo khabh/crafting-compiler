@@ -15,7 +15,10 @@ public class Relational extends Expression {
 
     @Override
     public Object interpret() {
-        return null;
+        Object lValue = lhs.interpret();
+        Object rValue = rhs.interpret();
+        
+        return RelationalOperator.operate(kind, lValue, rValue);
     }
 
     @Override

@@ -14,7 +14,14 @@ public class Unary extends Expression {
 
     @Override
     public Object interpret() {
-        return null;
+        var value = sub.interpret();
+        if (kind == Kind.Add && value instanceof Number) {
+            return ((Number) value).doubleValue() + 1;
+        }
+        if (kind == Kind.Subtract && value instanceof Number) {
+            return ((Number) value).doubleValue() - 1;
+        }
+        return 0.0;
     }
 
     @Override

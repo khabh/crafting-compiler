@@ -13,7 +13,10 @@ public class Or extends Expression {
 
     @Override
     public Object interpret() {
-        return null;
+        if ((boolean) lhs.interpret()) {
+            return true;
+        }
+        return rhs.interpret();
     }
 
     @Override
