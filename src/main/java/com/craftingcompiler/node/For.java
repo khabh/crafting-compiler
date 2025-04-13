@@ -2,7 +2,11 @@ package com.craftingcompiler.node;
 
 import com.craftingcompiler.util.SyntaxPrinter;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@Getter
+@AllArgsConstructor
 public class For extends Statement {
 
     private Variable variable;
@@ -10,11 +14,9 @@ public class For extends Statement {
     private Expression expression;
     List<Statement> block;
 
-    public For(Variable variable, Expression condition, Expression expression, List<Statement> block) {
-        this.variable = variable;
-        this.condition = condition;
-        this.expression = expression;
-        this.block = block;
+    @Override
+    public void interpret() {
+
     }
 
     @Override

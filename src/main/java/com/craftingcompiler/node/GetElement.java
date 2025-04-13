@@ -1,23 +1,19 @@
 package com.craftingcompiler.node;
 
 import com.craftingcompiler.util.SyntaxPrinter;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@Getter
+@AllArgsConstructor
 public class GetElement extends Expression {
 
     private Expression sub;
     private Expression index;
 
-    public GetElement(Expression sub, Expression index) {
-        this.sub = sub;
-        this.index = index;
-    }
-
-    public Expression getSub() {
-        return sub;
-    }
-
-    public Expression getIndex() {
-        return index;
+    @Override
+    public Object interpret() {
+        return null;
     }
 
     @Override

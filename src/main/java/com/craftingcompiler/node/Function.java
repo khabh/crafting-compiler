@@ -2,17 +2,20 @@ package com.craftingcompiler.node;
 
 import com.craftingcompiler.util.SyntaxPrinter;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@Getter
+@AllArgsConstructor
 public class Function extends Statement {
 
     private final String name;
     private final List<String> parameters;
     private final List<Statement> block;
 
-    public Function(String name, List<String> parameters, List<Statement> block) {
-        this.name = name;
-        this.parameters = parameters;
-        this.block = block;
+    @Override
+    public void interpret() {
+
     }
 
     @Override

@@ -2,15 +2,19 @@ package com.craftingcompiler.node;
 
 import com.craftingcompiler.util.SyntaxPrinter;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@Getter
+@AllArgsConstructor
 public class Call extends Expression {
 
     private Expression sub;
     List<Expression> arguments;
 
-    public Call(Expression sub, List<Expression> arguments) {
-        this.sub = sub;
-        this.arguments = arguments;
+    @Override
+    public Object interpret() {
+        return null;
     }
 
     @Override

@@ -1,15 +1,19 @@
 package com.craftingcompiler.node;
 
 import com.craftingcompiler.util.SyntaxPrinter;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@Getter
+@AllArgsConstructor
 public class SetVariable extends Expression {
 
     private String name;
     private Expression value;
 
-    public SetVariable(String name, Expression value) {
-        this.name = name;
-        this.value = value;
+    @Override
+    public Object interpret() {
+        return null;
     }
 
     @Override

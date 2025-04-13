@@ -1,17 +1,20 @@
 package com.craftingcompiler.node;
 
 import com.craftingcompiler.util.SyntaxPrinter;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@Getter
+@AllArgsConstructor
 public class SetElement extends Expression {
 
     private Expression sub;
     private Expression index;
     private Expression value;
 
-    public SetElement(Expression sub, Expression index, Expression value) {
-        this.sub = sub;
-        this.index = index;
-        this.value = value;
+    @Override
+    public Object interpret() {
+        return null;
     }
 
     @Override

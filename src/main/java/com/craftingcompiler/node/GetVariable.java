@@ -1,17 +1,18 @@
 package com.craftingcompiler.node;
 
 import com.craftingcompiler.util.SyntaxPrinter;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@Getter
+@AllArgsConstructor
 public class GetVariable extends Expression {
 
     private String name;
 
-    public GetVariable(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
+    @Override
+    public Object interpret() {
+        return null;
     }
 
     @Override

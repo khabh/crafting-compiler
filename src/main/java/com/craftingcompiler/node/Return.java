@@ -1,13 +1,18 @@
 package com.craftingcompiler.node;
 
 import com.craftingcompiler.util.SyntaxPrinter;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@Getter
+@AllArgsConstructor
 public class Return extends Statement {
 
     private Expression expression;
 
-    public Return(Expression expression) {
-        this.expression = expression;
+    @Override
+    public void interpret() {
+
     }
 
     @Override

@@ -1,15 +1,19 @@
 package com.craftingcompiler.node;
 
 import com.craftingcompiler.util.SyntaxPrinter;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@Getter
+@AllArgsConstructor
 public class Or extends Expression {
 
     private Expression lhs;
     private Expression rhs;
 
-    public Or(Expression lhs, Expression rhs) {
-        this.lhs = lhs;
-        this.rhs = rhs;
+    @Override
+    public Object interpret() {
+        return null;
     }
 
     @Override

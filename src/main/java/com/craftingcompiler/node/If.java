@@ -2,17 +2,20 @@ package com.craftingcompiler.node;
 
 import com.craftingcompiler.util.SyntaxPrinter;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@Getter
+@AllArgsConstructor
 public class If extends Statement {
 
     List<Expression> conditions;
     List<List<Statement>> blocks;
     List<Statement> elseBlock;
 
-    public If(List<Expression> conditions, List<List<Statement>> blocks, List<Statement> elseBlock) {
-        this.conditions = conditions;
-        this.blocks = blocks;
-        this.elseBlock = elseBlock;
+    @Override
+    public void interpret() {
+
     }
 
     @Override

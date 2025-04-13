@@ -1,13 +1,18 @@
 package com.craftingcompiler.node;
 
 import com.craftingcompiler.util.SyntaxPrinter;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@Getter
+@AllArgsConstructor
 public class NumberLiteral extends Expression {
 
     private double value = 0.0;
 
-    public NumberLiteral(double value) {
-        this.value = value;
+    @Override
+    public Object interpret() {
+        return null;
     }
 
     @Override

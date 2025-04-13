@@ -2,15 +2,19 @@ package com.craftingcompiler.node;
 
 import com.craftingcompiler.util.SyntaxPrinter;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@Getter
+@AllArgsConstructor
 public class Print extends Statement {
 
     private boolean lineFeed = false;
     List<Expression> arguments;
 
-    public Print(boolean lineFeed, List<Expression> arguments) {
-        this.lineFeed = lineFeed;
-        this.arguments = arguments;
+    @Override
+    public void interpret() {
+        
     }
 
     @Override

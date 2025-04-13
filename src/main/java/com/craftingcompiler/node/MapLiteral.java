@@ -2,13 +2,18 @@ package com.craftingcompiler.node;
 
 import com.craftingcompiler.util.SyntaxPrinter;
 import java.util.Map;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@Getter
+@AllArgsConstructor
 public class MapLiteral extends Expression {
 
     private Map<String, Expression> values;
 
-    public MapLiteral(Map<String, Expression> values) {
-        this.values = values;
+    @Override
+    public Object interpret() {
+        return null;
     }
 
     @Override

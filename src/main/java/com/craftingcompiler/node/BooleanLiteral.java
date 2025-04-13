@@ -1,13 +1,18 @@
 package com.craftingcompiler.node;
 
 import com.craftingcompiler.util.SyntaxPrinter;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@Getter
+@AllArgsConstructor
 public class BooleanLiteral extends Expression {
 
     private boolean value = false;
 
-    public BooleanLiteral(boolean value) {
-        this.value = value;
+    @Override
+    public Object interpret() {
+        return null;
     }
 
     @Override

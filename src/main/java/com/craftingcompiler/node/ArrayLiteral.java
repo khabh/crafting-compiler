@@ -2,13 +2,18 @@ package com.craftingcompiler.node;
 
 import com.craftingcompiler.util.SyntaxPrinter;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@Getter
+@AllArgsConstructor
 public class ArrayLiteral extends Expression {
 
     private List<Expression> values;
 
-    public ArrayLiteral(List<Expression> values) {
-        this.values = values;
+    @Override
+    public Object interpret() {
+        return null;
     }
 
     @Override
