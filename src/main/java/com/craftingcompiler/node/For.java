@@ -1,6 +1,11 @@
 package com.craftingcompiler.node;
 
+import static com.craftingcompiler.interpreter.Interpreter.local;
+
+import com.craftingcompiler.exception.BreakException;
+import com.craftingcompiler.exception.ContinueException;
 import com.craftingcompiler.util.SyntaxPrinter;
+import java.util.HashMap;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,7 +21,22 @@ public class For extends Statement {
 
     @Override
     public void interpret() {
-
+        local.getLast().addFirst(new HashMap<>());
+        variable.interpret();
+        while (true) {
+            boolean result = (boolean) condition.interpret();
+            if (!result) {
+                break;
+            }
+            try {
+                block.forEach(Statement::interpret);
+            } catch (ContinueException ignored) {
+            } catch (BreakException e) {
+                break;
+            }
+            expression.interpret();
+        }
+        local.getLast().pollFirst();
     }
 
     @Override
