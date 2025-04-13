@@ -14,6 +14,12 @@ public class SetElement extends Expression {
 
     @Override
     public Object interpret() {
+        var object = sub.interpret();
+        var number = index.interpret();
+        var updatedValue = value.interpret();
+        if (object instanceof CustomArray && number instanceof Number) {
+            return ((CustomArray) object).set(((Number) number).intValue(), updatedValue);
+        }
         return null;
     }
 

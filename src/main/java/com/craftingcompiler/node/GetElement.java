@@ -13,6 +13,11 @@ public class GetElement extends Expression {
 
     @Override
     public Object interpret() {
+        var object = sub.interpret();
+        var number = index.interpret();
+        if (object instanceof CustomArray && number instanceof Number) {
+            return ((CustomArray) object).get(((Number) number).intValue());
+        }
         return null;
     }
 

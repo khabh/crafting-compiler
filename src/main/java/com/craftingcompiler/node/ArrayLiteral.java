@@ -1,6 +1,7 @@
 package com.craftingcompiler.node;
 
 import com.craftingcompiler.util.SyntaxPrinter;
+import java.lang.reflect.Array;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +14,11 @@ public class ArrayLiteral extends Expression {
 
     @Override
     public Object interpret() {
-        return null;
+        Object[] array = (Object[]) Array.newInstance(Object.class, values.size());
+        for (int i = 0; i < values.size(); i++) {
+            Array.set(array, i, values.get(i).interpret());
+        }
+        return new CustomArray(array);
     }
 
     @Override

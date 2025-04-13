@@ -13,7 +13,7 @@ public class MapLiteral extends Expression {
 
     @Override
     public Object interpret() {
-        return null;
+        return values;
     }
 
     @Override
