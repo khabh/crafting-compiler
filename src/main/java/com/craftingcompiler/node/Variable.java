@@ -1,5 +1,7 @@
 package com.craftingcompiler.node;
 
+import static com.craftingcompiler.interpreter.Interpreter.local;
+
 import com.craftingcompiler.util.SyntaxPrinter;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +15,7 @@ public class Variable extends Statement {
 
     @Override
     public void interpret() {
-
+        local.getLast().getFirst().put(name, expression.interpret());
     }
 
     @Override
