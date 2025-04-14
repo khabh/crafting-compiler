@@ -3,6 +3,8 @@ package com.craftingcompiler.node;
 import static com.craftingcompiler.interpreter.Interpreter.global;
 import static com.craftingcompiler.interpreter.Interpreter.local;
 
+import com.craftingcompiler.code.Generator;
+import com.craftingcompiler.code.Instruction;
 import com.craftingcompiler.util.SyntaxPrinter;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,6 +15,16 @@ public class SetVariable extends Expression {
 
     private String name;
     private Expression value;
+
+    @Override
+    public void generate() {
+        value.generate();
+        var local = Generator.getLocal(name);
+        if (local == -1) {
+            throw new IllegalArgumentException("Variable " + name + " not found");
+        }
+        Generator.writeCode(Instruction.SET_LOCAL, local);
+    }
 
     @Override
     public Object interpret() {

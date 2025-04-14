@@ -2,7 +2,10 @@ package com.craftingcompiler.node;
 
 import static com.craftingcompiler.interpreter.Interpreter.local;
 
+import com.craftingcompiler.code.Generator;
+import com.craftingcompiler.code.Instruction;
 import com.craftingcompiler.util.SyntaxPrinter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -15,6 +18,26 @@ public class If extends Statement {
     List<Expression> conditions;
     List<List<Statement>> blocks;
     List<Statement> elseBlock;
+
+    @Override
+    public void generate() {
+        List<Integer> jumps = new ArrayList<>();
+        for (int i = 0; i < conditions.size(); i++) {
+            conditions.get(i).generate();
+            var conditionJump = Generator.writeCode(Instruction.CONDITION_JUMP);
+            Generator.pushBlock();
+            blocks.get(i).forEach(Statement::generate);
+            Generator.popBlock();
+            jumps.add(Generator.writeCode(Instruction.JUMP));
+            Generator.patchAddress(conditionJump);
+        }
+        if (elseBlock != null) {
+            Generator.pushBlock();
+            elseBlock.forEach(Statement::generate);
+            Generator.popBlock();
+        }
+        jumps.forEach(Generator::patchAddress);
+    }
 
     @Override
     public void interpret() {

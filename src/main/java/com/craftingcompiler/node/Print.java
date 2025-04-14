@@ -1,5 +1,7 @@
 package com.craftingcompiler.node;
 
+import com.craftingcompiler.code.Generator;
+import com.craftingcompiler.code.Instruction;
 import com.craftingcompiler.util.SyntaxPrinter;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -11,6 +13,17 @@ public class Print extends Statement {
 
     private boolean lineFeed = false;
     List<Expression> arguments;
+
+    @Override
+    public void generate() {
+        for (int i = arguments.size() - 1; i >= 0; i--) {
+            arguments.get(i).generate();
+        }
+        Generator.writeCode(Instruction.PRINT, arguments.size());
+        if (lineFeed) {
+            Generator.writeCode(Instruction.PRINT_LINE);
+        }
+    }
 
     @Override
     public void interpret() {
