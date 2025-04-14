@@ -5,6 +5,8 @@ import static com.craftingcompiler.interpreter.Interpreter.functionTable;
 import static com.craftingcompiler.interpreter.Interpreter.global;
 import static com.craftingcompiler.interpreter.Interpreter.local;
 
+import com.craftingcompiler.code.Generator;
+import com.craftingcompiler.code.Instruction;
 import com.craftingcompiler.util.SyntaxPrinter;
 import java.util.Map;
 import lombok.AllArgsConstructor;
@@ -15,6 +17,16 @@ import lombok.Getter;
 public class GetVariable extends Expression {
 
     private String name;
+
+    @Override
+    public void generate() {
+        int local = Generator.getLocal(name);
+        if (local == -1) {
+            Generator.writeCode(Instruction.GET_GLOBAL, name);
+            return;
+        }
+        Generator.writeCode(Instruction.GET_LOCAL, local);
+    }
 
     @Override
     public Object interpret() {

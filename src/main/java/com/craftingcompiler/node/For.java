@@ -2,9 +2,12 @@ package com.craftingcompiler.node;
 
 import static com.craftingcompiler.interpreter.Interpreter.local;
 
+import com.craftingcompiler.code.Generator;
+import com.craftingcompiler.code.Instruction;
 import com.craftingcompiler.exception.BreakException;
 import com.craftingcompiler.exception.ContinueException;
 import com.craftingcompiler.util.SyntaxPrinter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -18,6 +21,31 @@ public class For extends Statement {
     private Expression condition;
     private Expression expression;
     List<Statement> block;
+
+    @Override
+    public void generate() {
+        Generator.continueStack.add(new ArrayList<>());
+        Generator.breakStack.add(new ArrayList<>());
+        Generator.pushBlock();
+        variable.generate();
+        var jumpAddress = Generator.codes.size();
+        condition.generate();
+        var conditionJump = Generator.writeCode(Instruction.CONDITION_JUMP);
+        block.forEach(Statement::generate);
+        var continueAddress = Generator.codes.size();
+        expression.generate();
+        Generator.writeCode(Instruction.POP_OPERAND);
+        Generator.writeCode(Instruction.JUMP, jumpAddress);
+        Generator.patchAddress(conditionJump);
+        Generator.popBlock();
+        for (int jump : Generator.continueStack.get(Generator.continueStack.size() - 1)) {
+            Generator.patchOperand(jump, continueAddress);
+        }
+        Generator.breakStack.get(Generator.breakStack.size() - 1)
+                .forEach(Generator::patchAddress);
+        Generator.continueStack.remove(Generator.continueStack.size() - 1);
+        Generator.breakStack.remove(Generator.breakStack.size() - 1);
+    }
 
     @Override
     public void interpret() {

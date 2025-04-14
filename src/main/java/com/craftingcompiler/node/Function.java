@@ -1,5 +1,11 @@
 package com.craftingcompiler.node;
 
+import static com.craftingcompiler.code.Generator.codes;
+import static com.craftingcompiler.code.Generator.generatorFunctions;
+import static com.craftingcompiler.code.Generator.localSize;
+
+import com.craftingcompiler.code.Generator;
+import com.craftingcompiler.code.Instruction;
 import com.craftingcompiler.util.SyntaxPrinter;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -12,6 +18,20 @@ public class Function extends Statement {
     private final String name;
     private final List<String> parameters;
     private final List<Statement> block;
+
+    @Override
+    public void generate() {
+        generatorFunctions.put(name, codes.size());
+        var temp = Generator.writeCode(Instruction.ALLOC);
+
+        Generator.initBlock();
+        parameters.forEach(Generator::setLocal);
+        block.forEach(Statement::generate);
+        Generator.popBlock();
+
+        Generator.patchOperand(temp, localSize);
+        Generator.writeCode(Instruction.RETURN);
+    }
 
     @Override
     public void interpret() {

@@ -12,6 +12,11 @@ public class MapLiteral extends Expression {
     private Map<String, Expression> values;
 
     @Override
+    public void generate() {
+
+    }
+
+    @Override
     public Object interpret() {
         return values;
     }

@@ -1,5 +1,7 @@
 package com.craftingcompiler.node;
 
+import com.craftingcompiler.code.Generator;
+import com.craftingcompiler.code.Instruction;
 import com.craftingcompiler.util.SyntaxPrinter;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,6 +13,15 @@ public class SetElement extends Expression {
     private Expression sub;
     private Expression index;
     private Expression value;
+
+    @Override
+    public void generate() {
+        value.generate();
+        sub.generate();
+        index.generate();
+
+        Generator.writeCode(Instruction.SET_ELEMENT);
+    }
 
     @Override
     public Object interpret() {

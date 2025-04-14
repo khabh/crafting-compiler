@@ -13,6 +13,11 @@ public class Unary extends Expression {
     private Expression sub;
 
     @Override
+    public void generate() {
+
+    }
+
+    @Override
     public Object interpret() {
         var value = sub.interpret();
         if (kind == Kind.Add && value instanceof Number) {

@@ -1,7 +1,11 @@
 package com.craftingcompiler.node;
 
 import com.craftingcompiler.Kind;
+import com.craftingcompiler.code.Generator;
+import com.craftingcompiler.code.Instruction;
 import com.craftingcompiler.util.SyntaxPrinter;
+import java.util.EnumMap;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -9,9 +13,26 @@ import lombok.Getter;
 @AllArgsConstructor
 public class Arithmetic extends Expression {
 
+    private static final Map<Kind, Instruction> instructions = new EnumMap<>(Kind.class);
+
+    static {
+        instructions.put(Kind.Add, Instruction.ADD);
+        instructions.put(Kind.Subtract, Instruction.SUB);
+        instructions.put(Kind.Multiply, Instruction.MUL);
+        instructions.put(Kind.Divide, Instruction.DIV);
+        instructions.put(Kind.Modulo, Instruction.MOD);
+    }
+
     private Kind kind;
     private Expression lhs;
     private Expression rhs;
+
+    @Override
+    public void generate() {
+        lhs.generate();
+        rhs.generate();
+        Generator.writeCode(instructions.get(kind));
+    }
 
     @Override
     public Object interpret() {

@@ -2,6 +2,8 @@ package com.craftingcompiler.node;
 
 import static com.craftingcompiler.interpreter.Interpreter.local;
 
+import com.craftingcompiler.code.Generator;
+import com.craftingcompiler.code.Instruction;
 import com.craftingcompiler.exception.ReturnException;
 import com.craftingcompiler.util.SyntaxPrinter;
 import java.util.HashMap;
@@ -17,6 +19,16 @@ public class Call extends Expression {
 
     private Expression sub;
     List<Expression> arguments;
+
+    @Override
+    public void generate() {
+        for (var i = arguments.size() - 1; i >= 0; i--) {
+            arguments.get(i).generate();
+        }
+        sub.generate();
+        Generator.writeCode(Instruction.CALL, arguments.size());
+
+    }
 
     @Override
     public Object interpret() {
