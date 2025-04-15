@@ -1,64 +1,39 @@
 package com.craftingcompiler;
 
 import com.craftingcompiler.code.Generator;
-import com.craftingcompiler.interpreter.Interpreter;
+import com.craftingcompiler.machine.Machine;
 import com.craftingcompiler.node.Program;
 import com.craftingcompiler.util.ObjectCodePrinter;
-import com.craftingcompiler.util.SyntaxPrinter;
 import java.util.List;
 
 public class Application {
 
     public static void main(String[] args) {
-//        String sourceCode = """
-//                function main() {
-//                    var list = [1, 2, 3];
-//                    printLine list[1];
-//                    list[2] = 4;
-//                    printLine list[2];
-//                    printLine sqrt(9);
-//                    printLine mul('Hello ', 3);
-//                    sayHello(3);
-//                    for i = 0, i < 5, i = i + 1 {
-//                        if i == 1 {
-//                            printLine 'one';
-//                            continue;
-//                        } elif i == 2 {
-//                            printLine 'two';
-//                            break;
-//                        } elif i == 3 {
-//                            printLine 'three';
-//                        } else {
-//                            printLine i;
-//                        }
-//                        printLine i;
-//                    }
-//                }
-//
-//                function sayHello(j) {
-//                    for i = 0, i < j, i = i + 1 {
-//                        printLine 'Ho';
-//                    }
-//                }
-//
-//                function mul(a, b) {
-//                    printLine a, b;
-//                    return a * b;
-//                }
-//                """;
         String sourceCode = """
                 function main() {
-                    var array = [1, 2];
-                    array[0] = 'element';
+                    for i = 0, i < 10, i = i + 1 {
+                        if (i == 1) {
+                            continue;
+                        } else {
+                            if (i % 2 == 0) {
+                                printLine i;
+                                continue;
+                            }
+                        }
+                        printLine 'odd';
+                        if (i == 7) {
+                            break;
+                        }
+                    }
                 }
                 """;
         List<Token> tokens = new TokenScanner(sourceCode).scan();
-        printTokens(tokens);
         Program syntaxTree = new Parser(tokens).parse();
-        SyntaxPrinter.printSyntaxTree(syntaxTree);
-        new Interpreter().interpret(syntaxTree);
+        var objectCode = Generator.generate(syntaxTree);
+        ObjectCodePrinter.printObjectCode(objectCode);
+        System.out.println();
 
-        ObjectCodePrinter.printObjectCode(Generator.generate(syntaxTree));
+        Machine.execute(objectCode);
     }
 
     private static void printTokens(List<Token> tokens) {

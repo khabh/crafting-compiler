@@ -1,9 +1,9 @@
-package com.craftingcompiler.node;
+package com.craftingcompiler.machine;
 
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public class CustomArray {
+public class CustomArray extends GCObject {
 
     private final Object[] values;
 
@@ -17,15 +17,25 @@ public class CustomArray {
     }
 
     @Override
+    public void mark() {
+        this.mark();
+        for (Object value : values) {
+            if (value instanceof GCObject) {
+                ((GCObject) value).mark();
+            }
+        }
+    }
+
+    @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("[ ");
+        StringBuilder sb = new StringBuilder("[");
         for (int i = 0; i < values.length; i++) {
             sb.append(values[i]);
             if (i < values.length - 1) {
                 sb.append(", ");
             }
         }
-        sb.append(" ]");
+        sb.append("]");
         return sb.toString();
     }
 }

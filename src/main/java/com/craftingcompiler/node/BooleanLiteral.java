@@ -14,7 +14,7 @@ public class BooleanLiteral extends Expression {
 
     @Override
     public void generate() {
-        Generator.writeCode(Instruction.PUSH_BOOL, false);
+        Generator.writeCode(Instruction.PUSH_BOOL, value);
     }
 
     @Override

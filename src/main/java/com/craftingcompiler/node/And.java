@@ -16,7 +16,7 @@ public class And extends Expression {
     @Override
     public void generate() {
         lhs.generate();
-        var logicalOr = Generator.writeCode(Instruction.LOGICAL_OR);
+        var logicalOr = Generator.writeCode(Instruction.LOGICAL_AND);
         rhs.generate();
         Generator.patchAddress(logicalOr);
     }

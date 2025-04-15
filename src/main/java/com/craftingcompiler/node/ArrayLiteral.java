@@ -2,6 +2,7 @@ package com.craftingcompiler.node;
 
 import com.craftingcompiler.code.Generator;
 import com.craftingcompiler.code.Instruction;
+import com.craftingcompiler.machine.CustomArray;
 import com.craftingcompiler.util.SyntaxPrinter;
 import java.lang.reflect.Array;
 import java.util.List;

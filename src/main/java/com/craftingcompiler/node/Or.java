@@ -26,7 +26,7 @@ public class Or extends Expression {
         if ((boolean) lhs.interpret()) {
             return true;
         }
-        return rhs.interpret();
+        return lhs.interpret();
     }
 
     @Override
