@@ -1,6 +1,6 @@
 package com.craftingcompiler.node;
 
-import com.craftingcompiler.Kind;
+import com.craftingcompiler.kind.Kind;
 import java.util.Map;
 import java.util.function.BiPredicate;
 

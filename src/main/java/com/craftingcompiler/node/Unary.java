@@ -1,6 +1,6 @@
 package com.craftingcompiler.node;
 
-import com.craftingcompiler.Kind;
+import com.craftingcompiler.kind.Kind;
 import com.craftingcompiler.util.SyntaxPrinter;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

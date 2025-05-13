@@ -1,5 +1,6 @@
 package com.craftingcompiler;
 
+import com.craftingcompiler.kind.Kind;
 import com.craftingcompiler.node.And;
 import com.craftingcompiler.node.Arithmetic;
 import com.craftingcompiler.node.ArrayLiteral;
@@ -28,6 +29,7 @@ import com.craftingcompiler.node.Statement;
 import com.craftingcompiler.node.StringLiteral;
 import com.craftingcompiler.node.Unary;
 import com.craftingcompiler.node.Variable;
+import com.craftingcompiler.token.Token;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;

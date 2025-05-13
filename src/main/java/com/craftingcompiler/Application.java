@@ -1,5 +1,7 @@
 package com.craftingcompiler;
 
+import com.craftingcompiler.kind.StringToKind;
+import com.craftingcompiler.token.Token;
 import com.craftingcompiler.token.TokenScanner;
 import java.util.List;
 

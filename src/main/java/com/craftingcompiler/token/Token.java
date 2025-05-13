@@ -1,4 +1,6 @@
-package com.craftingcompiler;
+package com.craftingcompiler.token;
+
+import com.craftingcompiler.kind.Kind;
 
 public class Token {
     private final Kind kind;

@@ -1,4 +1,4 @@
-package com.craftingcompiler;
+package com.craftingcompiler.kind;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -56,6 +56,11 @@ public class StringToKind {
         stringToKind.put("}", Kind.RightBrace);
         stringToKind.put("[", Kind.LeftBraket);
         stringToKind.put("]", Kind.RightBraket);
+
+        stringToKind.put("recipe", Kind.Function);
+        stringToKind.put("serve", Kind.Return);
+        stringToKind.put("plant", Kind.Variable);
+        stringToKind.put("plate", Kind.Return);
     }
 
     public static Kind toKind(String token) {

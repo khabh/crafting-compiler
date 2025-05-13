@@ -1,7 +1,6 @@
 package com.craftingcompiler.token;
 
-import com.craftingcompiler.Kind;
-import com.craftingcompiler.Token;
+import com.craftingcompiler.kind.Kind;
 
 public class StringLiteralScanner implements TokenScannerState {
 

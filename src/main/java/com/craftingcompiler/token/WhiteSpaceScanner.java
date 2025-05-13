@@ -1,7 +1,5 @@
 package com.craftingcompiler.token;
 
-import com.craftingcompiler.Token;
-
 public class WhiteSpaceScanner implements TokenScannerState {
     @Override
     public boolean canStartWith(char c) {

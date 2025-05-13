@@ -1,8 +1,8 @@
 package com.craftingcompiler.node;
 
-import com.craftingcompiler.Kind;
 import com.craftingcompiler.code.Generator;
 import com.craftingcompiler.code.Instruction;
+import com.craftingcompiler.kind.Kind;
 import com.craftingcompiler.util.SyntaxPrinter;
 import java.util.EnumMap;
 import java.util.Map;

@@ -1,8 +1,7 @@
 package com.craftingcompiler.token;
 
-import com.craftingcompiler.Kind;
-import com.craftingcompiler.StringToKind;
-import com.craftingcompiler.Token;
+import com.craftingcompiler.kind.Kind;
+import com.craftingcompiler.kind.StringToKind;
 
 public class IdentifierAndKeywordScanner implements TokenScannerState {
 

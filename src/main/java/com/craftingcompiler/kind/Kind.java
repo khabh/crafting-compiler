@@ -1,4 +1,4 @@
-package com.craftingcompiler;
+package com.craftingcompiler.kind;
 
 public enum Kind {
     Unknown, EndOfToken,

@@ -1,7 +1,6 @@
 package com.craftingcompiler.token;
 
-import com.craftingcompiler.Kind;
-import com.craftingcompiler.Token;
+import com.craftingcompiler.kind.Kind;
 import java.util.ArrayList;
 import java.util.List;
 
