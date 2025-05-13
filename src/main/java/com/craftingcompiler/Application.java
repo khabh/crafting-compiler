@@ -1,15 +1,13 @@
 package com.craftingcompiler;
 
-import com.craftingcompiler.code.Generator;
-import com.craftingcompiler.machine.Machine;
-import com.craftingcompiler.node.Program;
-import com.craftingcompiler.util.ObjectCodePrinter;
+import com.craftingcompiler.token.TokenScanner;
 import java.util.List;
 
 public class Application {
 
     public static void main(String[] args) {
         String sourceCode = """
+                var x = 10;
                 function main() {
                     for i = 0, i < 10, i = i + 1 {
                         if (i == 1) {
@@ -28,12 +26,7 @@ public class Application {
                 }
                 """;
         List<Token> tokens = new TokenScanner(sourceCode).scan();
-        Program syntaxTree = new Parser(tokens).parse();
-        var objectCode = Generator.generate(syntaxTree);
-        ObjectCodePrinter.printObjectCode(objectCode);
-        System.out.println();
-
-        Machine.execute(objectCode);
+        printTokens(tokens);
     }
 
     private static void printTokens(List<Token> tokens) {
