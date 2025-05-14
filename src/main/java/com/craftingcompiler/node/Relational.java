@@ -16,12 +16,12 @@ public class Relational extends Expression {
     static Map<Kind, Instruction> instructions = new HashMap<>();
 
     static {
-        instructions.put(Kind.Equal, Instruction.EQ);
-        instructions.put(Kind.NotEqual, Instruction.NOT_EQ);
-        instructions.put(Kind.LessThan, Instruction.LESS_THAN);
-        instructions.put(Kind.GreaterThan, Instruction.GREATER_THAN);
-        instructions.put(Kind.LessOrEqual, Instruction.LESS_OR_EQ);
-        instructions.put(Kind.GreaterOrEqual, Instruction.GREATER_OR_EQ);
+        instructions.put(Kind.EQUAL, Instruction.EQ);
+        instructions.put(Kind.NOT_EQUAL, Instruction.NOT_EQ);
+        instructions.put(Kind.LESS_THAN, Instruction.LESS_THAN);
+        instructions.put(Kind.GREATER_THAN, Instruction.GREATER_THAN);
+        instructions.put(Kind.LESS_OR_EQUAL, Instruction.LESS_OR_EQ);
+        instructions.put(Kind.GREATER_OR_EQUAL, Instruction.GREATER_OR_EQ);
     }
 
     private Kind kind;

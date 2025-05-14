@@ -14,8 +14,8 @@ public class IdentifierAndKeywordScanner implements TokenScannerState {
     public Token scan(Source source) {
         String token = source.consumeWhile(c -> '0' <= c && c <= '9' || 'a' <= c && c <= 'z' || 'A' <= c && c <= 'Z');
         Kind kind = StringToKind.toKind(token);
-        if (kind == Kind.Unknown) {
-            return new Token(Kind.Identifier, token);
+        if (kind == Kind.UNKNOWN) {
+            return new Token(Kind.IDENTIFIER, token);
         }
         return new Token(kind, token);
     }

@@ -33,7 +33,7 @@ public class TokenScanner {
                 tokens.add(token);
             }
         }
-        tokens.add(new Token(Kind.EndOfToken, ""));
+        tokens.add(new Token(Kind.END_OF_TOKEN, ""));
         return tokens;
     }
 }

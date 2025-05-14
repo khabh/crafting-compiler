@@ -16,11 +16,11 @@ public class Arithmetic extends Expression {
     private static final Map<Kind, Instruction> instructions = new EnumMap<>(Kind.class);
 
     static {
-        instructions.put(Kind.Add, Instruction.ADD);
-        instructions.put(Kind.Subtract, Instruction.SUB);
-        instructions.put(Kind.Multiply, Instruction.MUL);
-        instructions.put(Kind.Divide, Instruction.DIV);
-        instructions.put(Kind.Modulo, Instruction.MOD);
+        instructions.put(Kind.ADD, Instruction.ADD);
+        instructions.put(Kind.SUBTRACT, Instruction.SUB);
+        instructions.put(Kind.MULTIPLY, Instruction.MUL);
+        instructions.put(Kind.DIVIDE, Instruction.DIV);
+        instructions.put(Kind.MODULO, Instruction.MOD);
     }
 
     private Kind kind;
@@ -41,10 +41,10 @@ public class Arithmetic extends Expression {
         if (areClass(Number.class, lValue, rValue)) {
             return interpretNumber(lValue, rValue);
         }
-        if (areClass(String.class, lValue, rValue) && kind == Kind.Add) {
+        if (areClass(String.class, lValue, rValue) && kind == Kind.ADD) {
             return interpretString(lValue, rValue);
         }
-        if (kind == Kind.Multiply) {
+        if (kind == Kind.MULTIPLY) {
             if (areClass(String.class, Number.class, rValue, lValue)) {
                 return interpretStringMultiple(rValue, lValue);
             }
@@ -67,19 +67,19 @@ public class Arithmetic extends Expression {
         double lNumber = ((Number) lValue).doubleValue();
         double rNumber = ((Number) rValue).doubleValue();
 
-        if (kind == Kind.Add) {
+        if (kind == Kind.ADD) {
             return lNumber + rNumber;
         }
-        if (kind == Kind.Subtract) {
+        if (kind == Kind.SUBTRACT) {
             return lNumber - rNumber;
         }
-        if (kind == Kind.Multiply) {
+        if (kind == Kind.MULTIPLY) {
             return lNumber * rNumber;
         }
-        if (kind == Kind.Divide) {
+        if (kind == Kind.DIVIDE) {
             return lNumber / rNumber;
         }
-        if (kind == Kind.Modulo) {
+        if (kind == Kind.MODULO) {
             return lNumber % rNumber;
         }
         throw new IllegalArgumentException("invalid Arithmetic");
@@ -88,7 +88,7 @@ public class Arithmetic extends Expression {
     private String interpretString(Object lValue, Object rValue) {
         String lString = ((String) lValue);
         String rString = ((String) rValue);
-        if (kind == Kind.Add) {
+        if (kind == Kind.ADD) {
             return lString + rString;
         }
         throw new IllegalArgumentException("invalid Arithmetic");

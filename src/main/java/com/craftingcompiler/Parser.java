@@ -47,9 +47,9 @@ public class Parser {
 
     public Program parse() {
         List<Function> functions = new ArrayList<>();
-        while (getCurrent().getKind() != Kind.EndOfToken) {
+        while (getCurrent().getKind() != Kind.END_OF_TOKEN) {
             Token token = getCurrent();
-            if (token.isKindEquals(Kind.Function)) {
+            if (token.isKindEquals(Kind.FUNCTION)) {
                 functions.add(parseFunction());
                 continue;
             }
@@ -59,24 +59,24 @@ public class Parser {
     }
 
     private Function parseFunction() {
-        skipCurrent(Kind.Function);
+        skipCurrent(Kind.FUNCTION);
         String functionName = getCurrent().getValue();
-        skipCurrent(Kind.Identifier, Kind.LeftParen);
+        skipCurrent(Kind.IDENTIFIER, Kind.LeftParen);
         List<String> parameters = parseParameters();
-        skipCurrent(Kind.RightParen, Kind.LeftBrace);
+        skipCurrent(Kind.RIGHT_PAREN, Kind.LeftBrace);
         List<Statement> block = parseBlock();
-        skipCurrent(Kind.RightBrace);
+        skipCurrent(Kind.RIGHT_BRACE);
 
         return new Function(functionName, parameters, block);
     }
 
     private List<String> parseParameters() {
         List<String> parameters = new ArrayList<>();
-        if (!isCurrentKind(Kind.RightParen)) {
+        if (!isCurrentKind(Kind.RIGHT_PAREN)) {
             do {
                 parameters.add(getCurrent().getValue());
-                skipCurrent(Kind.Identifier);
-            } while (skipCurrentIf(Kind.Comma));
+                skipCurrent(Kind.IDENTIFIER);
+            } while (skipCurrentIf(Kind.COMMA));
         }
 
         return parameters;
@@ -84,35 +84,35 @@ public class Parser {
 
     private List<Statement> parseBlock() {
         List<Statement> statements = new ArrayList<>();
-        while (!isCurrentKind(Kind.RightBrace)) {
-            if (isCurrentKind(Kind.EndOfToken)) {
+        while (!isCurrentKind(Kind.RIGHT_BRACE)) {
+            if (isCurrentKind(Kind.END_OF_TOKEN)) {
                 throw new IllegalArgumentException(getCurrent().getValue() + " 잘못된 구문입니다.");
             }
-            if (isCurrentKind(Kind.Variable)) {
+            if (isCurrentKind(Kind.VARIABLE)) {
                 statements.add(parseVariable());
                 continue;
             }
-            if (isCurrentKind(Kind.For)) {
+            if (isCurrentKind(Kind.FOR)) {
                 statements.add(parseFor());
                 continue;
             }
-            if (isCurrentKind(Kind.If)) {
+            if (isCurrentKind(Kind.IF)) {
                 statements.add(parseIf());
                 continue;
             }
-            if (isCurrentKind(Kind.Print) || isCurrentKind(Kind.PrintLine)) {
+            if (isCurrentKind(Kind.PRINT) || isCurrentKind(Kind.PRINT_LINE)) {
                 statements.add(parsePrint());
                 continue;
             }
-            if (isCurrentKind(Kind.Return)) {
+            if (isCurrentKind(Kind.RETURN)) {
                 statements.add(parseReturn());
                 continue;
             }
-            if (isCurrentKind(Kind.Break)) {
+            if (isCurrentKind(Kind.BREAK)) {
                 statements.add(parseBreak());
                 continue;
             }
-            if (isCurrentKind(Kind.Continue)) {
+            if (isCurrentKind(Kind.CONTINUE)) {
                 statements.add(parseContinue());
                 continue;
             }
@@ -123,11 +123,11 @@ public class Parser {
     }
 
     private For parseFor() {
-        skipCurrent(Kind.For);
+        skipCurrent(Kind.FOR);
 
         String variableName = getCurrent().getValue();
-        skipCurrent(Kind.Identifier);
-        skipCurrent(Kind.Assignment);
+        skipCurrent(Kind.IDENTIFIER);
+        skipCurrent(Kind.ASSIGNMENT);
         Expression variableExpression = parseExpression();
 
         if (variableExpression == null) {
@@ -135,13 +135,13 @@ public class Parser {
         }
 
         Variable variable = new Variable(variableName, variableExpression);
-        skipCurrent(Kind.Comma);
+        skipCurrent(Kind.COMMA);
         Expression condition = parseExpression();
         if (condition == null) {
             throw new IllegalArgumentException(getCurrent().getValue() + "for문에 조건식이 없습니다.");
         }
 
-        skipCurrent(Kind.Comma);
+        skipCurrent(Kind.COMMA);
         Expression expression = parseExpression();
         if (expression == null) {
             throw new IllegalArgumentException(getCurrent().getValue() + "for문에 증감식이 없습니다.");
@@ -149,13 +149,13 @@ public class Parser {
 
         skipCurrent(Kind.LeftBrace);
         List<Statement> block = parseBlock();
-        skipCurrent(Kind.RightBrace);
+        skipCurrent(Kind.RIGHT_BRACE);
 
         return new For(variable, condition, expression, block);
     }
 
     private If parseIf() {
-        skipCurrent(Kind.If);
+        skipCurrent(Kind.IF);
         List<Expression> conditions = new ArrayList<>();
         List<List<Statement>> blocks = new ArrayList<>();
         List<Statement> elseBlock = new ArrayList<>();
@@ -167,68 +167,68 @@ public class Parser {
             conditions.add(condition);
             skipCurrent(Kind.LeftBrace);
             blocks.add(parseBlock());
-            skipCurrent(Kind.RightBrace);
-        } while (skipCurrentIf(Kind.Elif));
-        if (skipCurrentIf(Kind.Else)) {
+            skipCurrent(Kind.RIGHT_BRACE);
+        } while (skipCurrentIf(Kind.ELIF));
+        if (skipCurrentIf(Kind.ELSE)) {
             skipCurrent(Kind.LeftBrace);
             elseBlock = parseBlock();
-            skipCurrent(Kind.RightBrace);
+            skipCurrent(Kind.RIGHT_BRACE);
         }
         return new If(conditions, blocks, elseBlock);
     }
 
     private Print parsePrint() {
-        boolean lineFeed = isCurrentKind(Kind.PrintLine);
+        boolean lineFeed = isCurrentKind(Kind.PRINT_LINE);
         List<Expression> arguments = new ArrayList<>();
         tokens.pollFirst();
-        if (!isCurrentKind(Kind.Semicolon)) {
+        if (!isCurrentKind(Kind.SEMICOLON)) {
             do {
                 arguments.add(parseExpression());
-            } while (skipCurrentIf(Kind.Comma));
+            } while (skipCurrentIf(Kind.COMMA));
         }
-        skipCurrent(Kind.Semicolon);
+        skipCurrent(Kind.SEMICOLON);
         return new Print(lineFeed, arguments);
     }
 
     private Return parseReturn() {
-        skipCurrent(Kind.Return);
+        skipCurrent(Kind.RETURN);
         var expression = parseExpression();
         if (expression == null) {
             throw new IllegalArgumentException("return문에 식이 없습니다.");
         }
-        skipCurrent(Kind.Semicolon);
+        skipCurrent(Kind.SEMICOLON);
         return new Return(expression);
     }
 
     private Break parseBreak() {
-        skipCurrent(Kind.Break);
-        skipCurrent(Kind.Semicolon);
+        skipCurrent(Kind.BREAK);
+        skipCurrent(Kind.SEMICOLON);
 
         return new Break();
     }
 
     private Continue parseContinue() {
-        skipCurrent(Kind.Continue);
-        skipCurrent(Kind.Semicolon);
+        skipCurrent(Kind.CONTINUE);
+        skipCurrent(Kind.SEMICOLON);
 
         return new Continue();
     }
 
     private Statement parseVariable() {
-        skipCurrent(Kind.Variable);
+        skipCurrent(Kind.VARIABLE);
         String name = getCurrent().getValue();
-        skipCurrent(Kind.Identifier, Kind.Assignment);
+        skipCurrent(Kind.IDENTIFIER, Kind.ASSIGNMENT);
         Expression expression = parseExpression();
         if (expression == null) {
             throw new IllegalArgumentException("변수 선언에 초기화식이 없습니다.");
         }
-        skipCurrent(Kind.Semicolon);
+        skipCurrent(Kind.SEMICOLON);
         return new Variable(name, expression);
     }
 
     private Statement parseExpressionStatement() {
         Expression expression = parseExpression();
-        skipCurrent(Kind.Semicolon);
+        skipCurrent(Kind.SEMICOLON);
         return new ExpressionStatement(expression);
     }
 
@@ -238,10 +238,10 @@ public class Parser {
 
     private Expression parseAssignment() {
         Expression expression = parseOr();
-        if (!isCurrentKind(Kind.Assignment)) {
+        if (!isCurrentKind(Kind.ASSIGNMENT)) {
             return expression;
         }
-        skipCurrent(Kind.Assignment);
+        skipCurrent(Kind.ASSIGNMENT);
         if (expression instanceof GetVariable getVariable) {
             return new SetVariable(getVariable.getName(), parseAssignment());
         }
@@ -253,7 +253,7 @@ public class Parser {
 
     private Expression parseOr() {
         var expression = parseAnd();
-        while (skipCurrentIf(Kind.LogicalOr)) {
+        while (skipCurrentIf(Kind.LOGICAL_OR)) {
             expression = new Or(expression, parseAnd());
         }
         return expression;
@@ -261,15 +261,15 @@ public class Parser {
 
     private Expression parseAnd() {
         var expression = parseRelational();
-        while (skipCurrentIf(Kind.LogicalAnd)) {
+        while (skipCurrentIf(Kind.LOGICAL_AND)) {
             expression = new And(expression, parseRelational());
         }
         return expression;
     }
 
     private Expression parseRelational() {
-        Set<Kind> operators = Set.of(Kind.Equal, Kind.NotEqual, Kind.LessThan, Kind.GreaterThan, Kind.LessOrEqual,
-                Kind.GreaterOrEqual);
+        Set<Kind> operators = Set.of(Kind.EQUAL, Kind.NOT_EQUAL, Kind.LESS_THAN, Kind.GREATER_THAN, Kind.LESS_OR_EQUAL,
+                Kind.GREATER_OR_EQUAL);
         var expression = parseArithmetic1();
         while (operators.contains(getCurrent().getKind())) {
             Kind kind = getCurrent().getKind();
@@ -280,7 +280,7 @@ public class Parser {
     }
 
     private Expression parseArithmetic1() {
-        Set<Kind> operators = Set.of(Kind.Add, Kind.Subtract);
+        Set<Kind> operators = Set.of(Kind.ADD, Kind.SUBTRACT);
         var expression = parseArithmetic2();
         while (operators.contains(getCurrent().getKind())) {
             Kind kind = getCurrent().getKind();
@@ -291,7 +291,7 @@ public class Parser {
     }
 
     private Expression parseArithmetic2() {
-        Set<Kind> operators = Set.of(Kind.Multiply, Kind.Divide, Kind.Modulo);
+        Set<Kind> operators = Set.of(Kind.MULTIPLY, Kind.DIVIDE, Kind.MODULO);
         var expression = parseUnary();
         while (operators.contains(getCurrent().getKind())) {
             Kind kind = getCurrent().getKind();
@@ -302,7 +302,7 @@ public class Parser {
     }
 
     private Expression parseUnary() {
-        Set<Kind> operators = Set.of(Kind.Add, Kind.Subtract);
+        Set<Kind> operators = Set.of(Kind.ADD, Kind.SUBTRACT);
         if (operators.contains(getCurrent().getKind())) {
             Kind kind = getCurrent().getKind();
             tokens.pollFirst();
@@ -313,25 +313,25 @@ public class Parser {
     }
 
     private Expression parseOperand() {
-        if (isCurrentKind(Kind.NullLiteral)) {
+        if (isCurrentKind(Kind.NULL_LITERAL)) {
             return parsePostfix(parseNullLiteral());
         }
-        if (isCurrentKind(Kind.TrueLiteral) || isCurrentKind(Kind.FalseLiteral)) {
+        if (isCurrentKind(Kind.TRUE_LITERAL) || isCurrentKind(Kind.FALSE_LITERAL)) {
             return parsePostfix(parseBooleanLiteral());
         }
-        if (isCurrentKind(Kind.NumberLiteral)) {
+        if (isCurrentKind(Kind.NUMBER_LITERAL)) {
             return parsePostfix(parseNumberLiteral());
         }
-        if (isCurrentKind(Kind.StringLiteral)) {
+        if (isCurrentKind(Kind.STRING_LITERAL)) {
             return parsePostfix(parseStringLiteral());
         }
-        if (isCurrentKind(Kind.LeftBraket)) {
+        if (isCurrentKind(Kind.LEFT_BRACKET)) {
             return parsePostfix(parseListLiteral());
         }
         if (isCurrentKind(Kind.LeftBrace)) {
             return parsePostfix(parseMapLiteral());
         }
-        if (isCurrentKind(Kind.Identifier)) {
+        if (isCurrentKind(Kind.IDENTIFIER)) {
             return parsePostfix(parseIdentifier());
         }
         if (isCurrentKind(Kind.LeftParen)) {
@@ -342,66 +342,66 @@ public class Parser {
     }
 
     private Expression parseNullLiteral() {
-        skipCurrent(Kind.NullLiteral);
+        skipCurrent(Kind.NULL_LITERAL);
         return new NullLiteral();
     }
 
     private Expression parseBooleanLiteral() {
-        boolean value = getCurrent().isKindEquals(Kind.TrueLiteral);
+        boolean value = getCurrent().isKindEquals(Kind.TRUE_LITERAL);
         tokens.pollFirst();
         return new BooleanLiteral(value);
     }
 
     private Expression parseNumberLiteral() {
         double value = Double.parseDouble(getCurrent().getValue());
-        skipCurrent(Kind.NumberLiteral);
+        skipCurrent(Kind.NUMBER_LITERAL);
         return new NumberLiteral(value);
     }
 
     private Expression parseStringLiteral() {
         String value = getCurrent().getValue();
-        skipCurrent(Kind.StringLiteral);
+        skipCurrent(Kind.STRING_LITERAL);
         return new StringLiteral(value);
     }
 
     private Expression parseListLiteral() {
         List<Expression> expressions = new ArrayList<>();
-        skipCurrent(Kind.LeftBraket);
-        if (!isCurrentKind(Kind.RightBraket)) {
+        skipCurrent(Kind.LEFT_BRACKET);
+        if (!isCurrentKind(Kind.RIGHT_BRACKET)) {
             do {
                 expressions.add(parseExpression());
-            } while (skipCurrentIf(Kind.Comma));
+            } while (skipCurrentIf(Kind.COMMA));
         }
-        skipCurrent(Kind.RightBraket);
+        skipCurrent(Kind.RIGHT_BRACKET);
         return new ArrayLiteral(expressions);
     }
 
     private Expression parseMapLiteral() {
         Map<String, Expression> map = new HashMap<>();
         skipCurrent(Kind.LeftBrace);
-        if (!isCurrentKind(Kind.RightBrace)) {
+        if (!isCurrentKind(Kind.RIGHT_BRACE)) {
             do {
                 String key = getCurrent().getValue();
-                skipCurrent(Kind.StringLiteral);
-                skipCurrent(Kind.Colon);
+                skipCurrent(Kind.STRING_LITERAL);
+                skipCurrent(Kind.COLON);
                 Expression expression = parseExpression();
                 map.put(key, expression);
-            } while (skipCurrentIf(Kind.RightBrace));
+            } while (skipCurrentIf(Kind.RIGHT_BRACE));
         }
-        skipCurrent(Kind.RightBrace);
+        skipCurrent(Kind.RIGHT_BRACE);
         return new MapLiteral(map);
     }
 
     private Expression parseIdentifier() {
         String name = getCurrent().getValue();
-        skipCurrent(Kind.Identifier);
+        skipCurrent(Kind.IDENTIFIER);
         return new GetVariable(name);
     }
 
     private Expression parseInnerExpression() {
         skipCurrent(Kind.LeftParen);
         Expression expression = parseExpression();
-        skipCurrent(Kind.RightParen);
+        skipCurrent(Kind.RIGHT_PAREN);
         return expression;
     }
 
@@ -411,7 +411,7 @@ public class Parser {
                 sub = parseCall(sub);
                 continue;
             }
-            if (isCurrentKind(Kind.LeftBraket)) {
+            if (isCurrentKind(Kind.LEFT_BRACKET)) {
                 sub = parseElement(sub);
                 continue;
             }
@@ -420,21 +420,21 @@ public class Parser {
     }
 
     private Expression parseElement(Expression sub) {
-        skipCurrent(Kind.LeftBraket);
+        skipCurrent(Kind.LEFT_BRACKET);
         Expression inner = parseExpression();
-        skipCurrent(Kind.RightBraket);
+        skipCurrent(Kind.RIGHT_BRACKET);
         return new GetElement(sub, inner);
     }
 
     private Expression parseCall(Expression sub) {
         skipCurrent(Kind.LeftParen);
         List<Expression> arguments = new ArrayList<>();
-        if (!isCurrentKind(Kind.RightParen)) {
+        if (!isCurrentKind(Kind.RIGHT_PAREN)) {
             do {
                 arguments.add(parseExpression());
-            } while (skipCurrentIf(Kind.Comma));
+            } while (skipCurrentIf(Kind.COMMA));
         }
-        skipCurrent(Kind.RightParen);
+        skipCurrent(Kind.RIGHT_PAREN);
         return new Call(sub, arguments);
     }
 

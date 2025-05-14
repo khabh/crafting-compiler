@@ -1,29 +1,32 @@
 package com.craftingcompiler.kind;
 
 public enum Kind {
-    Unknown, EndOfToken,
+    UNKNOWN, END_OF_TOKEN,
 
-    NullLiteral,
-    TrueLiteral, FalseLiteral,
-    NumberLiteral, StringLiteral,
-    Identifier,
+    NULL_LITERAL,
+    TRUE_LITERAL, FALSE_LITERAL,
+    NUMBER_LITERAL, STRING_LITERAL,
+    IDENTIFIER,
 
-    Function, Return,
-    Variable,
-    For, Break, Continue,
-    If, Elif, Else,
-    Print, PrintLine,
+    FUNCTION, RETURN,
+    VARIABLE,
+    FOR, BREAK, CONTINUE,
+    IF, ELIF, ELSE,
+    PRINT, PRINT_LINE,
 
-    LogicalAnd, LogicalOr,
-    Assignment,
-    Add, Subtract,
-    Multiply, Divide, Modulo,
-    Equal, NotEqual,
-    LessThan, GreaterThan,
-    LessOrEqual, GreaterOrEqual,
+    LOGICAL_AND, LOGICAL_OR,
+    ASSIGNMENT,
+    ADD, SUBTRACT,
+    MULTIPLY, DIVIDE, MODULO,
+    EQUAL, NOT_EQUAL,
+    LESS_THAN, GREATER_THAN,
+    LESS_OR_EQUAL, GREATER_OR_EQUAL,
 
-    Comma, Colon, Semicolon,
-    LeftParen, RightParen,
-    LeftBrace, RightBrace,
-    LeftBraket, RightBraket,
+    COMMA, COLON, SEMICOLON,
+    LeftParen, RIGHT_PAREN,
+    LeftBrace, RIGHT_BRACE,
+    LEFT_BRACKET, RIGHT_BRACKET,
+
+    GROW, SALT, WASH,
+    SERVE, PLATE,
 }

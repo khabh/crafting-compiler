@@ -44,12 +44,12 @@ public enum RelationalOperator {
     GreaterOrEqual((l, r) -> isNumber(l, r) && toNumber(l) >= toNumber(r));
 
     private static final Map<Kind, RelationalOperator> operatorTable = Map.of(
-            Kind.Equal, RelationalOperator.Equal,
-            Kind.NotEqual, RelationalOperator.NotEqual,
-            Kind.LessThan, RelationalOperator.LessThan,
-            Kind.GreaterThan, RelationalOperator.GreaterThan,
-            Kind.LessOrEqual, RelationalOperator.LessOrEqual,
-            Kind.GreaterOrEqual, RelationalOperator.GreaterOrEqual
+            Kind.EQUAL, RelationalOperator.Equal,
+            Kind.NOT_EQUAL, RelationalOperator.NotEqual,
+            Kind.LESS_THAN, RelationalOperator.LessThan,
+            Kind.GREATER_THAN, RelationalOperator.GreaterThan,
+            Kind.LESS_OR_EQUAL, RelationalOperator.LessOrEqual,
+            Kind.GREATER_OR_EQUAL, RelationalOperator.GreaterOrEqual
     );
 
     private final BiPredicate<Object, Object> predicate;

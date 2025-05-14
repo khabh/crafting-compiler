@@ -13,7 +13,7 @@ public class OperatorAndPunctuatorScanner implements TokenScannerState {
     @Override
     public Token scan(Source source) {
         String token = source.consumeWhile(this::isOperatorOrPunctuator);
-        while (!token.isEmpty() && StringToKind.toKind(token) == Kind.Unknown) {
+        while (!token.isEmpty() && StringToKind.toKind(token) == Kind.UNKNOWN) {
             int lastIndex = token.length() - 1;
             source.unconsume(token.charAt(lastIndex));
             token = token.substring(0, lastIndex);

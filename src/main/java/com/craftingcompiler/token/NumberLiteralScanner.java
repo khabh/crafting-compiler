@@ -12,6 +12,6 @@ public class NumberLiteralScanner implements TokenScannerState {
     @Override
     public Token scan(Source source) {
         String token = source.consumeWhile(c -> '0' <= c && c <= '9' || c == '.');
-        return new Token(Kind.NumberLiteral, token);
+        return new Token(Kind.NUMBER_LITERAL, token);
     }
 }
