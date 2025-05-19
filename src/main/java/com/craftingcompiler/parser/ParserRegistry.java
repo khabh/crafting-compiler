@@ -1,6 +1,7 @@
 package com.craftingcompiler.parser;
 
 import com.craftingcompiler.kind.Kind;
+import com.craftingcompiler.parser.expression.ExpressionParser;
 import com.craftingcompiler.parser.statement.BreakParser;
 import com.craftingcompiler.parser.statement.ContinueParser;
 import com.craftingcompiler.parser.statement.ExpressionStatementParser;
