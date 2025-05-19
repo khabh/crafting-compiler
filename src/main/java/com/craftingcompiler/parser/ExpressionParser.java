@@ -7,49 +7,29 @@ import com.craftingcompiler.node.ArrayLiteral;
 import com.craftingcompiler.node.BooleanLiteral;
 import com.craftingcompiler.node.Call;
 import com.craftingcompiler.node.Expression;
-import com.craftingcompiler.node.Function;
 import com.craftingcompiler.node.GetElement;
 import com.craftingcompiler.node.GetVariable;
 import com.craftingcompiler.node.MapLiteral;
 import com.craftingcompiler.node.NullLiteral;
 import com.craftingcompiler.node.NumberLiteral;
 import com.craftingcompiler.node.Or;
-import com.craftingcompiler.node.Program;
 import com.craftingcompiler.node.Relational;
 import com.craftingcompiler.node.SetElement;
 import com.craftingcompiler.node.SetVariable;
-import com.craftingcompiler.node.Statement;
 import com.craftingcompiler.node.StringLiteral;
 import com.craftingcompiler.node.Unary;
-import com.craftingcompiler.token.Token;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class Parser {
+public class ExpressionParser {
 
-    private final TokenCursor cursor;
+    private TokenCursor cursor;
 
-    public Parser(List<Token> tokens) {
-        this.cursor = new TokenCursor(tokens);
-    }
-
-    public Program parse() {
-        List<Function> functions = new ArrayList<>();
-        while (cursor.current().getKind() != Kind.END_OF_TOKEN) {
-            Token token = cursor.current();
-            if (!token.isKindEquals(Kind.FUNCTION)) {
-                throw new IllegalArgumentException(token.getValue() + " 잘못된 구문입니다.");
-            }
-            Statement statement = ParserRegistry.getParser(token).parse(cursor);
-            functions.add((Function) statement);
-        }
-        return new Program(functions);
-    }
-
-    private Expression parseExpression() {
+    Expression parse(TokenCursor cursor) {
+        this.cursor = cursor;
         return parseAssignment();
     }
 
@@ -253,5 +233,9 @@ public class Parser {
         }
         cursor.consume(Kind.RIGHT_PAREN);
         return new Call(sub, arguments);
+    }
+
+    private Expression parseExpression() {
+        return parseAssignment();
     }
 }

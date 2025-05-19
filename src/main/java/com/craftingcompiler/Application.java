@@ -11,14 +11,32 @@ import java.util.List;
 public class Application {
 
     public static void main(String[] args) {
+//        String sourceCode = """
+//                recipe main() {
+//                    plant x = 10;
+//                    printLine add(x, 20);
+//                }
+//
+//                recipe add(a, b) {
+//                    serve a + b;
+//                }
+//                """;
         String sourceCode = """
                 recipe main() {
-                    plant x = 10;
-                    printLine add(x, 20);
-                }
-                
-                recipe add(a, b) {
-                    serve a + b;
+                    for i = 0, i < 10, i = i + 1 {
+                        if (i == 1) {
+                            continue;
+                        } else {
+                            if (i % 2 == 0) {
+                                printLine i;
+                                continue;
+                            }
+                        }
+                        printLine 'odd';
+                        if (i == 7) {
+                            break;
+                        }
+                    }
                 }
                 """;
         List<Token> tokens = new TokenScanner(sourceCode).scan();

@@ -29,12 +29,16 @@ public class TokenCursor {
                 .forEach(this::consume);
     }
 
-    public void consume(Kind kind) {
+    public void consume(Kind kind, String message) {
         if (is(kind)) {
             tokens.pollFirst();
             return;
         }
-        throw new IllegalArgumentException(kind + " 토큰이 필요합니다.");
+        throw new IllegalArgumentException(message);
+    }
+
+    public void consume(Kind kind) {
+        consume(kind, kind + " 토큰이 필요합니다.");
     }
 
     public boolean is(Kind kind) {
