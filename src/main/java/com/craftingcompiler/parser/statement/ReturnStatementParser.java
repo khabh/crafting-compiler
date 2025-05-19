@@ -1,8 +1,9 @@
-package com.craftingcompiler.parser;
+package com.craftingcompiler.parser.statement;
 
 import com.craftingcompiler.kind.Kind;
 import com.craftingcompiler.node.Return;
 import com.craftingcompiler.node.Statement;
+import com.craftingcompiler.parser.TokenCursor;
 
 public class ReturnStatementParser extends StatementParser {
 

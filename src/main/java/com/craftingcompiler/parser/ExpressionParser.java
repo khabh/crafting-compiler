@@ -28,7 +28,7 @@ public class ExpressionParser {
 
     private TokenCursor cursor;
 
-    Expression parse(TokenCursor cursor) {
+    public Expression parse(TokenCursor cursor) {
         this.cursor = cursor;
         return parseAssignment();
     }

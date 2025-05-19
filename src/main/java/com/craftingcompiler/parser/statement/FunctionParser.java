@@ -1,8 +1,9 @@
-package com.craftingcompiler.parser;
+package com.craftingcompiler.parser.statement;
 
 import com.craftingcompiler.kind.Kind;
 import com.craftingcompiler.node.Function;
 import com.craftingcompiler.node.Statement;
+import com.craftingcompiler.parser.TokenCursor;
 import java.util.ArrayList;
 import java.util.List;
 
