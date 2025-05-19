@@ -5,7 +5,7 @@ import com.craftingcompiler.node.Return;
 import com.craftingcompiler.node.Statement;
 import com.craftingcompiler.parser.TokenCursor;
 
-public class ReturnStatementParser extends StatementParser {
+public class ReturnParser extends StatementParser {
 
     @Override
     public Statement parse(TokenCursor cursor) {

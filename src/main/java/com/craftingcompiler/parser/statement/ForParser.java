@@ -8,7 +8,7 @@ import com.craftingcompiler.node.Variable;
 import com.craftingcompiler.parser.TokenCursor;
 import java.util.List;
 
-public class ForStatementParser extends StatementParser {
+public class ForParser extends StatementParser {
 
     @Override
     public Statement parse(TokenCursor cursor) {

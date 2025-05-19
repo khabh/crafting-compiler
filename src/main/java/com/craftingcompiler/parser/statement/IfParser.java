@@ -8,7 +8,7 @@ import com.craftingcompiler.parser.TokenCursor;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IfStatementParser extends StatementParser {
+public class IfParser extends StatementParser {
 
     @Override
     public If parse(TokenCursor cursor) {

@@ -5,7 +5,7 @@ import com.craftingcompiler.node.Break;
 import com.craftingcompiler.node.Statement;
 import com.craftingcompiler.parser.TokenCursor;
 
-public class BreakStatementParser extends StatementParser {
+public class BreakParser extends StatementParser {
 
     @Override
     public Statement parse(TokenCursor cursor) {

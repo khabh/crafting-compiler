@@ -5,7 +5,7 @@ import com.craftingcompiler.node.Continue;
 import com.craftingcompiler.node.Statement;
 import com.craftingcompiler.parser.TokenCursor;
 
-public class ContinueStatementParser extends StatementParser {
+public class ContinueParser extends StatementParser {
 
     @Override
     public Statement parse(TokenCursor cursor) {

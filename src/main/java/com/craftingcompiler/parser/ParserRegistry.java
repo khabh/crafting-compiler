@@ -1,14 +1,14 @@
 package com.craftingcompiler.parser;
 
 import com.craftingcompiler.kind.Kind;
-import com.craftingcompiler.parser.statement.BreakStatementParser;
-import com.craftingcompiler.parser.statement.ContinueStatementParser;
+import com.craftingcompiler.parser.statement.BreakParser;
+import com.craftingcompiler.parser.statement.ContinueParser;
 import com.craftingcompiler.parser.statement.ExpressionStatementParser;
-import com.craftingcompiler.parser.statement.ForStatementParser;
+import com.craftingcompiler.parser.statement.ForParser;
 import com.craftingcompiler.parser.statement.FunctionParser;
-import com.craftingcompiler.parser.statement.IfStatementParser;
-import com.craftingcompiler.parser.statement.PrintStatementParser;
-import com.craftingcompiler.parser.statement.ReturnStatementParser;
+import com.craftingcompiler.parser.statement.IfParser;
+import com.craftingcompiler.parser.statement.PrintParser;
+import com.craftingcompiler.parser.statement.ReturnParser;
 import com.craftingcompiler.parser.statement.StatementParser;
 import com.craftingcompiler.parser.statement.VariableDeclarationParser;
 import com.craftingcompiler.token.Token;
@@ -24,14 +24,14 @@ public class ParserRegistry {
     static {
         PARSERS.put(Kind.FUNCTION, new FunctionParser());
         PARSERS.put(Kind.VARIABLE, new VariableDeclarationParser());
-        PARSERS.put(Kind.FOR, new ForStatementParser());
-        PARSERS.put(Kind.IF, new IfStatementParser());
-        StatementParser printStatementParser = new PrintStatementParser();
+        PARSERS.put(Kind.FOR, new ForParser());
+        PARSERS.put(Kind.IF, new IfParser());
+        StatementParser printStatementParser = new PrintParser();
         PARSERS.put(Kind.PRINT, printStatementParser);
         PARSERS.put(Kind.PRINT_LINE, printStatementParser);
-        PARSERS.put(Kind.RETURN, new ReturnStatementParser());
-        PARSERS.put(Kind.BREAK, new BreakStatementParser());
-        PARSERS.put(Kind.CONTINUE, new ContinueStatementParser());
+        PARSERS.put(Kind.RETURN, new ReturnParser());
+        PARSERS.put(Kind.BREAK, new BreakParser());
+        PARSERS.put(Kind.CONTINUE, new ContinueParser());
     }
 
     public static StatementParser getParser(Token token) {
