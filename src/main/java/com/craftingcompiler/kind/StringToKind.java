@@ -49,9 +49,9 @@ public class StringToKind {
         stringToKind.put(",", Kind.COMMA);
         stringToKind.put(":", Kind.COLON);
         stringToKind.put(";", Kind.SEMICOLON);
-        stringToKind.put("(", Kind.LeftParen);
+        stringToKind.put("(", Kind.LEFT_PAREN);
         stringToKind.put(")", Kind.RIGHT_PAREN);
-        stringToKind.put("{", Kind.LeftBrace);
+        stringToKind.put("{", Kind.LEFT_BRACE);
         stringToKind.put("}", Kind.RIGHT_BRACE);
         stringToKind.put("[", Kind.LEFT_BRACKET);
         stringToKind.put("]", Kind.RIGHT_BRACKET);

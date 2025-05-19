@@ -1,4 +1,4 @@
-package com.craftingcompiler;
+package com.craftingcompiler.parser;
 
 import com.craftingcompiler.kind.Kind;
 import com.craftingcompiler.node.And;
@@ -31,26 +31,25 @@ import com.craftingcompiler.node.Unary;
 import com.craftingcompiler.node.Variable;
 import com.craftingcompiler.token.Token;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class Parser {
-    private final LinkedList<Token> tokens;
+
+    private final TokenCursor tokenCursor;
 
     public Parser(List<Token> tokens) {
-        this.tokens = new LinkedList<>(tokens);
+        this.tokenCursor = new TokenCursor(tokens);
     }
 
     public Program parse() {
         List<Function> functions = new ArrayList<>();
-        while (getCurrent().getKind() != Kind.END_OF_TOKEN) {
-            Token token = getCurrent();
+        while (tokenCursor.current().getKind() != Kind.END_OF_TOKEN) {
+            Token token = tokenCursor.current();
             if (token.isKindEquals(Kind.FUNCTION)) {
-                functions.add(parseFunction());
+                functions.add(parsFunction());
                 continue;
             }
             throw new IllegalArgumentException(token.getValue() + " 잘못된 구문입니다.");
@@ -58,25 +57,25 @@ public class Parser {
         return new Program(functions);
     }
 
-    private Function parseFunction() {
-        skipCurrent(Kind.FUNCTION);
-        String functionName = getCurrent().getValue();
-        skipCurrent(Kind.IDENTIFIER, Kind.LeftParen);
+    public Function parsFunction() {
+        tokenCursor.consume(Kind.FUNCTION);
+        String functionName = tokenCursor.current().getValue();
+        tokenCursor.consume(Kind.IDENTIFIER, Kind.LEFT_PAREN);
         List<String> parameters = parseParameters();
-        skipCurrent(Kind.RIGHT_PAREN, Kind.LeftBrace);
+        tokenCursor.consume(Kind.RIGHT_PAREN, Kind.LEFT_BRACE);
         List<Statement> block = parseBlock();
-        skipCurrent(Kind.RIGHT_BRACE);
+        tokenCursor.consume(Kind.RIGHT_BRACE);
 
-        return new Function(functionName, parameters, block);
+        return new com.craftingcompiler.node.Function(functionName, parameters, block);
     }
 
     private List<String> parseParameters() {
         List<String> parameters = new ArrayList<>();
-        if (!isCurrentKind(Kind.RIGHT_PAREN)) {
+        if (!tokenCursor.is(Kind.RIGHT_PAREN)) {
             do {
-                parameters.add(getCurrent().getValue());
-                skipCurrent(Kind.IDENTIFIER);
-            } while (skipCurrentIf(Kind.COMMA));
+                parameters.add(tokenCursor.current().getValue());
+                tokenCursor.consume(Kind.IDENTIFIER);
+            } while (tokenCursor.tryConsume(Kind.COMMA));
         }
 
         return parameters;
@@ -84,35 +83,35 @@ public class Parser {
 
     private List<Statement> parseBlock() {
         List<Statement> statements = new ArrayList<>();
-        while (!isCurrentKind(Kind.RIGHT_BRACE)) {
-            if (isCurrentKind(Kind.END_OF_TOKEN)) {
-                throw new IllegalArgumentException(getCurrent().getValue() + " 잘못된 구문입니다.");
+        while (!tokenCursor.is(Kind.RIGHT_BRACE)) {
+            if (tokenCursor.is(Kind.END_OF_TOKEN)) {
+                throw new IllegalArgumentException(tokenCursor.current().getValue() + " 잘못된 구문입니다.");
             }
-            if (isCurrentKind(Kind.VARIABLE)) {
+            if (tokenCursor.is(Kind.VARIABLE)) {
                 statements.add(parseVariable());
                 continue;
             }
-            if (isCurrentKind(Kind.FOR)) {
+            if (tokenCursor.is(Kind.FOR)) {
                 statements.add(parseFor());
                 continue;
             }
-            if (isCurrentKind(Kind.IF)) {
+            if (tokenCursor.is(Kind.IF)) {
                 statements.add(parseIf());
                 continue;
             }
-            if (isCurrentKind(Kind.PRINT) || isCurrentKind(Kind.PRINT_LINE)) {
+            if (tokenCursor.is(Kind.PRINT) || tokenCursor.is(Kind.PRINT_LINE)) {
                 statements.add(parsePrint());
                 continue;
             }
-            if (isCurrentKind(Kind.RETURN)) {
+            if (tokenCursor.is(Kind.RETURN)) {
                 statements.add(parseReturn());
                 continue;
             }
-            if (isCurrentKind(Kind.BREAK)) {
+            if (tokenCursor.is(Kind.BREAK)) {
                 statements.add(parseBreak());
                 continue;
             }
-            if (isCurrentKind(Kind.CONTINUE)) {
+            if (tokenCursor.is(Kind.CONTINUE)) {
                 statements.add(parseContinue());
                 continue;
             }
@@ -123,39 +122,39 @@ public class Parser {
     }
 
     private For parseFor() {
-        skipCurrent(Kind.FOR);
+        tokenCursor.consume(Kind.FOR);
 
-        String variableName = getCurrent().getValue();
-        skipCurrent(Kind.IDENTIFIER);
-        skipCurrent(Kind.ASSIGNMENT);
+        String variableName = tokenCursor.current().getValue();
+        tokenCursor.consume(Kind.IDENTIFIER);
+        tokenCursor.consume(Kind.ASSIGNMENT);
         Expression variableExpression = parseExpression();
 
         if (variableExpression == null) {
-            throw new IllegalArgumentException(getCurrent().getValue() + "for문에 초기화식이 없습니다.");
+            throw new IllegalArgumentException(tokenCursor.current().getValue() + "for문에 초기화식이 없습니다.");
         }
 
         Variable variable = new Variable(variableName, variableExpression);
-        skipCurrent(Kind.COMMA);
+        tokenCursor.consume(Kind.COMMA);
         Expression condition = parseExpression();
         if (condition == null) {
-            throw new IllegalArgumentException(getCurrent().getValue() + "for문에 조건식이 없습니다.");
+            throw new IllegalArgumentException(tokenCursor.current().getValue() + "for문에 조건식이 없습니다.");
         }
 
-        skipCurrent(Kind.COMMA);
+        tokenCursor.consume(Kind.COMMA);
         Expression expression = parseExpression();
         if (expression == null) {
-            throw new IllegalArgumentException(getCurrent().getValue() + "for문에 증감식이 없습니다.");
+            throw new IllegalArgumentException(tokenCursor.current().getValue() + "for문에 증감식이 없습니다.");
         }
 
-        skipCurrent(Kind.LeftBrace);
+        tokenCursor.consume(Kind.LEFT_BRACE);
         List<Statement> block = parseBlock();
-        skipCurrent(Kind.RIGHT_BRACE);
+        tokenCursor.consume(Kind.RIGHT_BRACE);
 
         return new For(variable, condition, expression, block);
     }
 
     private If parseIf() {
-        skipCurrent(Kind.IF);
+        tokenCursor.consume(Kind.IF);
         List<Expression> conditions = new ArrayList<>();
         List<List<Statement>> blocks = new ArrayList<>();
         List<Statement> elseBlock = new ArrayList<>();
@@ -165,70 +164,70 @@ public class Parser {
                 throw new IllegalArgumentException("if문에 조건식이 없습니다.");
             }
             conditions.add(condition);
-            skipCurrent(Kind.LeftBrace);
+            tokenCursor.consume(Kind.LEFT_BRACE);
             blocks.add(parseBlock());
-            skipCurrent(Kind.RIGHT_BRACE);
-        } while (skipCurrentIf(Kind.ELIF));
-        if (skipCurrentIf(Kind.ELSE)) {
-            skipCurrent(Kind.LeftBrace);
+            tokenCursor.consume(Kind.RIGHT_BRACE);
+        } while (tokenCursor.tryConsume(Kind.ELIF));
+        if (tokenCursor.tryConsume(Kind.ELSE)) {
+            tokenCursor.consume(Kind.LEFT_BRACE);
             elseBlock = parseBlock();
-            skipCurrent(Kind.RIGHT_BRACE);
+            tokenCursor.consume(Kind.RIGHT_BRACE);
         }
         return new If(conditions, blocks, elseBlock);
     }
 
     private Print parsePrint() {
-        boolean lineFeed = isCurrentKind(Kind.PRINT_LINE);
+        boolean lineFeed = tokenCursor.is(Kind.PRINT_LINE);
         List<Expression> arguments = new ArrayList<>();
-        tokens.pollFirst();
-        if (!isCurrentKind(Kind.SEMICOLON)) {
+        tokenCursor.next();
+        if (!tokenCursor.is(Kind.SEMICOLON)) {
             do {
                 arguments.add(parseExpression());
-            } while (skipCurrentIf(Kind.COMMA));
+            } while (tokenCursor.tryConsume(Kind.COMMA));
         }
-        skipCurrent(Kind.SEMICOLON);
+        tokenCursor.consume(Kind.SEMICOLON);
         return new Print(lineFeed, arguments);
     }
 
     private Return parseReturn() {
-        skipCurrent(Kind.RETURN);
+        tokenCursor.consume(Kind.RETURN);
         var expression = parseExpression();
         if (expression == null) {
             throw new IllegalArgumentException("return문에 식이 없습니다.");
         }
-        skipCurrent(Kind.SEMICOLON);
+        tokenCursor.consume(Kind.SEMICOLON);
         return new Return(expression);
     }
 
     private Break parseBreak() {
-        skipCurrent(Kind.BREAK);
-        skipCurrent(Kind.SEMICOLON);
+        tokenCursor.consume(Kind.BREAK);
+        tokenCursor.consume(Kind.SEMICOLON);
 
         return new Break();
     }
 
     private Continue parseContinue() {
-        skipCurrent(Kind.CONTINUE);
-        skipCurrent(Kind.SEMICOLON);
+        tokenCursor.consume(Kind.CONTINUE);
+        tokenCursor.consume(Kind.SEMICOLON);
 
         return new Continue();
     }
 
     private Statement parseVariable() {
-        skipCurrent(Kind.VARIABLE);
-        String name = getCurrent().getValue();
-        skipCurrent(Kind.IDENTIFIER, Kind.ASSIGNMENT);
+        tokenCursor.consume(Kind.VARIABLE);
+        String name = tokenCursor.current().getValue();
+        tokenCursor.consume(Kind.IDENTIFIER, Kind.ASSIGNMENT);
         Expression expression = parseExpression();
         if (expression == null) {
             throw new IllegalArgumentException("변수 선언에 초기화식이 없습니다.");
         }
-        skipCurrent(Kind.SEMICOLON);
+        tokenCursor.consume(Kind.SEMICOLON);
         return new Variable(name, expression);
     }
 
     private Statement parseExpressionStatement() {
         Expression expression = parseExpression();
-        skipCurrent(Kind.SEMICOLON);
+        tokenCursor.consume(Kind.SEMICOLON);
         return new ExpressionStatement(expression);
     }
 
@@ -238,10 +237,10 @@ public class Parser {
 
     private Expression parseAssignment() {
         Expression expression = parseOr();
-        if (!isCurrentKind(Kind.ASSIGNMENT)) {
+        if (!tokenCursor.is(Kind.ASSIGNMENT)) {
             return expression;
         }
-        skipCurrent(Kind.ASSIGNMENT);
+        tokenCursor.consume(Kind.ASSIGNMENT);
         if (expression instanceof GetVariable getVariable) {
             return new SetVariable(getVariable.getName(), parseAssignment());
         }
@@ -253,7 +252,7 @@ public class Parser {
 
     private Expression parseOr() {
         var expression = parseAnd();
-        while (skipCurrentIf(Kind.LOGICAL_OR)) {
+        while (tokenCursor.tryConsume(Kind.LOGICAL_OR)) {
             expression = new Or(expression, parseAnd());
         }
         return expression;
@@ -261,7 +260,7 @@ public class Parser {
 
     private Expression parseAnd() {
         var expression = parseRelational();
-        while (skipCurrentIf(Kind.LOGICAL_AND)) {
+        while (tokenCursor.tryConsume(Kind.LOGICAL_AND)) {
             expression = new And(expression, parseRelational());
         }
         return expression;
@@ -271,9 +270,9 @@ public class Parser {
         Set<Kind> operators = Set.of(Kind.EQUAL, Kind.NOT_EQUAL, Kind.LESS_THAN, Kind.GREATER_THAN, Kind.LESS_OR_EQUAL,
                 Kind.GREATER_OR_EQUAL);
         var expression = parseArithmetic1();
-        while (operators.contains(getCurrent().getKind())) {
-            Kind kind = getCurrent().getKind();
-            tokens.pollFirst();
+        while (operators.contains(tokenCursor.current().getKind())) {
+            Kind kind = tokenCursor.current().getKind();
+            tokenCursor.next();
             expression = new Relational(kind, expression, parseArithmetic1());
         }
         return expression;
@@ -282,9 +281,9 @@ public class Parser {
     private Expression parseArithmetic1() {
         Set<Kind> operators = Set.of(Kind.ADD, Kind.SUBTRACT);
         var expression = parseArithmetic2();
-        while (operators.contains(getCurrent().getKind())) {
-            Kind kind = getCurrent().getKind();
-            tokens.pollFirst();
+        while (operators.contains(tokenCursor.current().getKind())) {
+            Kind kind = tokenCursor.current().getKind();
+            tokenCursor.next();
             expression = new Arithmetic(kind, expression, parseArithmetic2());
         }
         return expression;
@@ -293,9 +292,9 @@ public class Parser {
     private Expression parseArithmetic2() {
         Set<Kind> operators = Set.of(Kind.MULTIPLY, Kind.DIVIDE, Kind.MODULO);
         var expression = parseUnary();
-        while (operators.contains(getCurrent().getKind())) {
-            Kind kind = getCurrent().getKind();
-            tokens.pollFirst();
+        while (operators.contains(tokenCursor.current().getKind())) {
+            Kind kind = tokenCursor.current().getKind();
+            tokenCursor.next();
             expression = new Arithmetic(kind, expression, parseUnary());
         }
         return expression;
@@ -303,9 +302,9 @@ public class Parser {
 
     private Expression parseUnary() {
         Set<Kind> operators = Set.of(Kind.ADD, Kind.SUBTRACT);
-        if (operators.contains(getCurrent().getKind())) {
-            Kind kind = getCurrent().getKind();
-            tokens.pollFirst();
+        if (operators.contains(tokenCursor.current().getKind())) {
+            Kind kind = tokenCursor.current().getKind();
+            tokenCursor.next();
             Expression sub = parseUnary();
             return new Unary(kind, sub);
         }
@@ -313,28 +312,28 @@ public class Parser {
     }
 
     private Expression parseOperand() {
-        if (isCurrentKind(Kind.NULL_LITERAL)) {
+        if (tokenCursor.is(Kind.NULL_LITERAL)) {
             return parsePostfix(parseNullLiteral());
         }
-        if (isCurrentKind(Kind.TRUE_LITERAL) || isCurrentKind(Kind.FALSE_LITERAL)) {
+        if (tokenCursor.is(Kind.TRUE_LITERAL) || tokenCursor.is(Kind.FALSE_LITERAL)) {
             return parsePostfix(parseBooleanLiteral());
         }
-        if (isCurrentKind(Kind.NUMBER_LITERAL)) {
+        if (tokenCursor.is(Kind.NUMBER_LITERAL)) {
             return parsePostfix(parseNumberLiteral());
         }
-        if (isCurrentKind(Kind.STRING_LITERAL)) {
+        if (tokenCursor.is(Kind.STRING_LITERAL)) {
             return parsePostfix(parseStringLiteral());
         }
-        if (isCurrentKind(Kind.LEFT_BRACKET)) {
+        if (tokenCursor.is(Kind.LEFT_BRACKET)) {
             return parsePostfix(parseListLiteral());
         }
-        if (isCurrentKind(Kind.LeftBrace)) {
+        if (tokenCursor.is(Kind.LEFT_BRACE)) {
             return parsePostfix(parseMapLiteral());
         }
-        if (isCurrentKind(Kind.IDENTIFIER)) {
+        if (tokenCursor.is(Kind.IDENTIFIER)) {
             return parsePostfix(parseIdentifier());
         }
-        if (isCurrentKind(Kind.LeftParen)) {
+        if (tokenCursor.is(Kind.LEFT_PAREN)) {
             return parsePostfix(parseInnerExpression());
         }
 
@@ -342,76 +341,76 @@ public class Parser {
     }
 
     private Expression parseNullLiteral() {
-        skipCurrent(Kind.NULL_LITERAL);
+        tokenCursor.consume(Kind.NULL_LITERAL);
         return new NullLiteral();
     }
 
     private Expression parseBooleanLiteral() {
-        boolean value = getCurrent().isKindEquals(Kind.TRUE_LITERAL);
-        tokens.pollFirst();
+        boolean value = tokenCursor.current().isKindEquals(Kind.TRUE_LITERAL);
+        tokenCursor.next();
         return new BooleanLiteral(value);
     }
 
     private Expression parseNumberLiteral() {
-        double value = Double.parseDouble(getCurrent().getValue());
-        skipCurrent(Kind.NUMBER_LITERAL);
+        double value = Double.parseDouble(tokenCursor.current().getValue());
+        tokenCursor.consume(Kind.NUMBER_LITERAL);
         return new NumberLiteral(value);
     }
 
     private Expression parseStringLiteral() {
-        String value = getCurrent().getValue();
-        skipCurrent(Kind.STRING_LITERAL);
+        String value = tokenCursor.current().getValue();
+        tokenCursor.consume(Kind.STRING_LITERAL);
         return new StringLiteral(value);
     }
 
     private Expression parseListLiteral() {
         List<Expression> expressions = new ArrayList<>();
-        skipCurrent(Kind.LEFT_BRACKET);
-        if (!isCurrentKind(Kind.RIGHT_BRACKET)) {
+        tokenCursor.consume(Kind.LEFT_BRACKET);
+        if (!tokenCursor.is(Kind.RIGHT_BRACKET)) {
             do {
                 expressions.add(parseExpression());
-            } while (skipCurrentIf(Kind.COMMA));
+            } while (tokenCursor.tryConsume(Kind.COMMA));
         }
-        skipCurrent(Kind.RIGHT_BRACKET);
+        tokenCursor.consume(Kind.RIGHT_BRACKET);
         return new ArrayLiteral(expressions);
     }
 
     private Expression parseMapLiteral() {
         Map<String, Expression> map = new HashMap<>();
-        skipCurrent(Kind.LeftBrace);
-        if (!isCurrentKind(Kind.RIGHT_BRACE)) {
+        tokenCursor.consume(Kind.LEFT_BRACE);
+        if (!tokenCursor.is(Kind.RIGHT_BRACE)) {
             do {
-                String key = getCurrent().getValue();
-                skipCurrent(Kind.STRING_LITERAL);
-                skipCurrent(Kind.COLON);
+                String key = tokenCursor.current().getValue();
+                tokenCursor.consume(Kind.STRING_LITERAL);
+                tokenCursor.consume(Kind.COLON);
                 Expression expression = parseExpression();
                 map.put(key, expression);
-            } while (skipCurrentIf(Kind.RIGHT_BRACE));
+            } while (tokenCursor.tryConsume(Kind.RIGHT_BRACE));
         }
-        skipCurrent(Kind.RIGHT_BRACE);
+        tokenCursor.consume(Kind.RIGHT_BRACE);
         return new MapLiteral(map);
     }
 
     private Expression parseIdentifier() {
-        String name = getCurrent().getValue();
-        skipCurrent(Kind.IDENTIFIER);
+        String name = tokenCursor.current().getValue();
+        tokenCursor.consume(Kind.IDENTIFIER);
         return new GetVariable(name);
     }
 
     private Expression parseInnerExpression() {
-        skipCurrent(Kind.LeftParen);
+        tokenCursor.consume(Kind.LEFT_PAREN);
         Expression expression = parseExpression();
-        skipCurrent(Kind.RIGHT_PAREN);
+        tokenCursor.consume(Kind.RIGHT_PAREN);
         return expression;
     }
 
     private Expression parsePostfix(Expression sub) {
         while (true) {
-            if (isCurrentKind(Kind.LeftParen)) {
+            if (tokenCursor.is(Kind.LEFT_PAREN)) {
                 sub = parseCall(sub);
                 continue;
             }
-            if (isCurrentKind(Kind.LEFT_BRACKET)) {
+            if (tokenCursor.is(Kind.LEFT_BRACKET)) {
                 sub = parseElement(sub);
                 continue;
             }
@@ -420,52 +419,21 @@ public class Parser {
     }
 
     private Expression parseElement(Expression sub) {
-        skipCurrent(Kind.LEFT_BRACKET);
+        tokenCursor.consume(Kind.LEFT_BRACKET);
         Expression inner = parseExpression();
-        skipCurrent(Kind.RIGHT_BRACKET);
+        tokenCursor.consume(Kind.RIGHT_BRACKET);
         return new GetElement(sub, inner);
     }
 
     private Expression parseCall(Expression sub) {
-        skipCurrent(Kind.LeftParen);
+        tokenCursor.consume(Kind.LEFT_PAREN);
         List<Expression> arguments = new ArrayList<>();
-        if (!isCurrentKind(Kind.RIGHT_PAREN)) {
+        if (!tokenCursor.is(Kind.RIGHT_PAREN)) {
             do {
                 arguments.add(parseExpression());
-            } while (skipCurrentIf(Kind.COMMA));
+            } while (tokenCursor.tryConsume(Kind.COMMA));
         }
-        skipCurrent(Kind.RIGHT_PAREN);
+        tokenCursor.consume(Kind.RIGHT_PAREN);
         return new Call(sub, arguments);
-    }
-
-    private boolean skipCurrentIf(Kind kind) {
-        try {
-            skipCurrent(kind);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    private void skipCurrent(Kind... kind) {
-        Arrays.stream(kind)
-                .sequential()
-                .forEach(this::skipCurrent);
-    }
-
-    private void skipCurrent(Kind kind) {
-        if (isCurrentKind(kind)) {
-            tokens.pollFirst();
-            return;
-        }
-        throw new IllegalArgumentException(kind + " 토큰이 필요합니다.");
-    }
-
-    private boolean isCurrentKind(Kind kind) {
-        return getCurrent().isKindEquals(kind);
-    }
-
-    private Token getCurrent() {
-        return tokens.peekFirst();
     }
 }

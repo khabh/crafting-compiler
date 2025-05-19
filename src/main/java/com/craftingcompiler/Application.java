@@ -1,12 +1,10 @@
 package com.craftingcompiler;
 
-import com.craftingcompiler.code.Generator;
 import com.craftingcompiler.kind.StringToKind;
-import com.craftingcompiler.machine.Machine;
 import com.craftingcompiler.node.Program;
+import com.craftingcompiler.parser.Parser;
 import com.craftingcompiler.token.Token;
 import com.craftingcompiler.token.TokenScanner;
-import com.craftingcompiler.util.ObjectCodePrinter;
 import com.craftingcompiler.util.SyntaxPrinter;
 import java.util.List;
 
@@ -28,11 +26,11 @@ public class Application {
         Program syntaxTree = new Parser(tokens).parse();
         SyntaxPrinter.printSyntaxTree(syntaxTree);
 
-        var objectCode = Generator.generate(syntaxTree);
-        ObjectCodePrinter.printObjectCode(objectCode);
-        System.out.println();
-
-        Machine.execute(objectCode);
+//        var objectCode = Generator.generate(syntaxTree);
+//        ObjectCodePrinter.printObjectCode(objectCode);
+//        System.out.println();
+//
+//        Machine.execute(objectCode);
     }
 
     private static void printTokens(List<Token> tokens) {
