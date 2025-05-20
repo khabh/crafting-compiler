@@ -1,6 +1,7 @@
 package com.craftingcompiler.parser;
 
 import com.craftingcompiler.kind.Kind;
+import com.craftingcompiler.parser.expression.AssignableParser;
 import com.craftingcompiler.parser.expression.ExpressionParser;
 import com.craftingcompiler.parser.statement.BreakParser;
 import com.craftingcompiler.parser.statement.ContinueParser;
@@ -10,14 +11,17 @@ import com.craftingcompiler.parser.statement.FunctionParser;
 import com.craftingcompiler.parser.statement.IfParser;
 import com.craftingcompiler.parser.statement.PrintParser;
 import com.craftingcompiler.parser.statement.ReturnParser;
+import com.craftingcompiler.parser.statement.SaltParser;
 import com.craftingcompiler.parser.statement.StatementParser;
 import com.craftingcompiler.parser.statement.VariableDeclarationParser;
+import com.craftingcompiler.parser.statement.WashParser;
 import com.craftingcompiler.token.Token;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ParserRegistry {
 
+    public static final AssignableParser ASSIGNABLE_PARSER = new AssignableParser();
     private static final ExpressionParser EXPRESSION_PARSER = new ExpressionParser();
     private static final StatementParser DEFAULT_PARSER = new ExpressionStatementParser();
     private static final Map<Kind, StatementParser> PARSERS = new HashMap<>();
@@ -33,6 +37,8 @@ public class ParserRegistry {
         PARSERS.put(Kind.RETURN, new ReturnParser());
         PARSERS.put(Kind.BREAK, new BreakParser());
         PARSERS.put(Kind.CONTINUE, new ContinueParser());
+        PARSERS.put(Kind.SALT, new SaltParser());
+        PARSERS.put(Kind.WASH, new WashParser());
     }
 
     public static StatementParser getParser(Token token) {

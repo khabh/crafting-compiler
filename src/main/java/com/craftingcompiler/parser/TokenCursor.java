@@ -30,7 +30,6 @@ public class TokenCursor {
     }
 
     public void consume(Kind kind, String message) {
-        System.out.print(current().getValue());
         if (is(kind)) {
             tokens.pollFirst();
             return;

@@ -1,6 +1,12 @@
 package com.craftingcompiler.machine;
 
-public class GCObject {
+import com.craftingcompiler.node.Potato;
+
+public class GCObject extends Potato {
+
+    public GCObject(Object value) {
+        super(value);
+    }
 
     protected boolean isMarked = false;
 

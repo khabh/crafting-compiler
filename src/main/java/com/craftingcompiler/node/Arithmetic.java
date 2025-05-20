@@ -38,6 +38,12 @@ public class Arithmetic extends Expression {
     public Object interpret() {
         var lValue = lhs.interpret();
         var rValue = rhs.interpret();
+        if (lValue instanceof Potato) {
+            lValue = ((Potato) lValue).getValue();
+        }
+        if (rValue instanceof Potato) {
+            rValue = ((Potato) rValue).getValue();
+        }
         if (areClass(Number.class, lValue, rValue)) {
             return interpretNumber(lValue, rValue);
         }
@@ -60,6 +66,7 @@ public class Arithmetic extends Expression {
     }
 
     private boolean areClass(Class<?> lClass, Class<?> rClass, Object lValue, Object rValue) {
+
         return lClass.isInstance(lValue) && rClass.isInstance(rValue);
     }
 

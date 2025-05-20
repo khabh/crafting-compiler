@@ -29,4 +29,5 @@ public enum Kind {
 
     GROW, SALT, WASH,
     SERVE, PLATE,
+    DOT
 }

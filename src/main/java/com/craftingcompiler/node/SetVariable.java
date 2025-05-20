@@ -30,13 +30,21 @@ public class SetVariable extends Expression {
     public Object interpret() {
         for (var variables : local.getLast()) {
             if (variables.containsKey(name)) {
-                return variables.put(name, value.interpret());
+                return variables.put(name, interpretValue());
             }
         }
         if (global.containsKey(name)) {
-            return global.put(name, value.interpret());
+            return global.put(name, interpretValue());
         }
         throw new IllegalArgumentException("선언되지 않은 변수입니다: " + name);
+    }
+
+    private Object interpretValue() {
+        Object result = value.interpret();
+        if (result instanceof Potato) {
+            return result;
+        }
+        return new Potato(result);
     }
 
     @Override

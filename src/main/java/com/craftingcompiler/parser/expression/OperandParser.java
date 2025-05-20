@@ -6,6 +6,7 @@ import com.craftingcompiler.node.BooleanLiteral;
 import com.craftingcompiler.node.Call;
 import com.craftingcompiler.node.Expression;
 import com.craftingcompiler.node.GetElement;
+import com.craftingcompiler.node.GetProperty;
 import com.craftingcompiler.node.GetVariable;
 import com.craftingcompiler.node.MapLiteral;
 import com.craftingcompiler.node.NullLiteral;
@@ -123,6 +124,10 @@ public class OperandParser implements ExpressionParserBase {
                 sub = parseElement(sub);
                 continue;
             }
+            if (cursor.is(Kind.DOT)) {
+                sub = parseProperty(sub);
+                continue;
+            }
             return sub;
         }
     }
@@ -144,6 +149,13 @@ public class OperandParser implements ExpressionParserBase {
         }
         cursor.consume(Kind.RIGHT_PAREN);
         return new Call(sub, arguments);
+    }
+
+    private Expression parseProperty(Expression sub) {
+        cursor.consume(Kind.DOT);
+        String name = cursor.current().getValue();
+        cursor.consume(Kind.IDENTIFIER);
+        return new GetProperty(sub, name);
     }
 
     private Expression parseExpression() {

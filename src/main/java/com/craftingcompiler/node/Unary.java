@@ -20,6 +20,9 @@ public class Unary extends Expression {
     @Override
     public Object interpret() {
         var value = sub.interpret();
+        if (value instanceof Potato) {
+            value = ((Potato) value).getValue();
+        }
         if (kind == Kind.ADD && value instanceof Number) {
             return ((Number) value).doubleValue() + 1;
         }

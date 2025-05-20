@@ -1,11 +1,21 @@
 package com.craftingcompiler.machine;
 
-import lombok.AllArgsConstructor;
+import com.craftingcompiler.node.Potato;
 
-@AllArgsConstructor
 public class CustomArray extends GCObject {
 
-    private final Object[] values;
+    private Object[] values;
+
+    public CustomArray(Object[] values) {
+        super(values);
+        for (int i = 0; i < values.length; i++) {
+            if (values[i] instanceof Potato) {
+                continue;
+            }
+            values[i] = new Potato(values[i]);
+        }
+        this.values = values;
+    }
 
     public Object get(int index) {
         return values[index];

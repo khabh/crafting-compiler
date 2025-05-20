@@ -60,6 +60,10 @@ public class StringToKind {
         stringToKind.put("serve", Kind.RETURN);
         stringToKind.put("plant", Kind.VARIABLE);
         stringToKind.put("plate", Kind.RETURN);
+
+        stringToKind.put("salt", Kind.SALT);
+        stringToKind.put("wash", Kind.WASH);
+        stringToKind.put(".", Kind.DOT);
     }
 
     public static Kind toKind(String token) {

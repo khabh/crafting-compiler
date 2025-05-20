@@ -25,7 +25,15 @@ public class Variable extends Statement {
 
     @Override
     public void interpret() {
-        local.getLast().getFirst().put(name, expression.interpret());
+        local.getLast().getFirst().put(name, interpretExpression());
+    }
+
+    private Object interpretExpression() {
+        Object result = expression.interpret();
+        if (result instanceof Potato) {
+            return result;
+        }
+        return new Potato(result);
     }
 
     @Override

@@ -40,6 +40,12 @@ public class Relational extends Expression {
         Object lValue = lhs.interpret();
         Object rValue = rhs.interpret();
 
+        if (lValue instanceof Potato) {
+            lValue = ((Potato) lValue).getValue();
+        }
+        if (rValue instanceof Potato) {
+            rValue = ((Potato) rValue).getValue();
+        }
         return RelationalOperator.operate(kind, lValue, rValue);
     }
 
